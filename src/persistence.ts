@@ -1,4 +1,4 @@
-import { mongoose, Schema } from "mongoose";
+import mongoose, { Schema } from "mongoose";
 
 import type { Address, Payee } from "./types";
 
@@ -14,7 +14,7 @@ const addressSchema = new Schema<Address>({
   countryCode: String,
 });
 
-const PayeeSchema = new Schema<Payee>({
+const payeeSchema = new Schema<Payee>({
   email: String,
   address: addressSchema,
   orgName: String,
@@ -23,7 +23,7 @@ const PayeeSchema = new Schema<Payee>({
 
 export const addPayee = async (payee: Payee) => {
   await mongoose.connect("mongodb://127.0.0.1:27017/test");
-  const Payee = mongoose.model("Payee", PayeeSchema);
+  const Payee = mongoose.model("Payee", payeeSchema);
 
   const payeeInstance = new Payee(payee);
   await payeeInstance.save();

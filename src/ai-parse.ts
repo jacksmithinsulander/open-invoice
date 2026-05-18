@@ -6,7 +6,7 @@ const OLLAMA_MODEL = "deepseek-coder-v2:latest";
 
 export const getAddressFromText = async (
   rawUnparsedText: string,
-): Promise<Payee> => {
+): Promise<PayeeRawAddress> => {
   const prompt = `
 Extract ONLY invoicing-related information from the text below.
 
@@ -44,7 +44,9 @@ ${rawUnparsedText}
     messages: [{ role: "user", content: prompt }],
   });
 
-  const payee: PayeeRawAddress = JSON.parse(aiResponse.message.content);
+  const payee: PayeeRawAddress = JSON.parse(
+    aiResponse.message.content,
+  ) as PayeeRawAddress;
 
   if (payee.rawAddress) {
     payee.rawAddress = payee.rawAddress.replace(/\bnr\.?\s*(\d+)/gi, "$1");

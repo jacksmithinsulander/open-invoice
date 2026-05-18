@@ -4,8 +4,16 @@ import type { Address, NominatimResponse } from "./types";
 
 const BASE_URL = "https://nominatim.openstreetmap.org/search?";
 
-export const parseAddress = async (unparsedAddress: string): Promise<any> => {
-  const firstRoundParsing = addressit(unparsedAddress);
+type AddressItResult = {
+  text: string;
+};
+
+export const parseAddress = async (
+  unparsedAddress: string,
+): Promise<Address | undefined> => {
+  const firstRoundParsing: AddressItResult = addressit(
+    unparsedAddress,
+  ) as AddressItResult;
   const prepareForApiCall: string = firstRoundParsing.text.replace(/ /g, "+");
   const url = new URL(BASE_URL);
   url.searchParams.set("q", prepareForApiCall);
@@ -20,11 +28,23 @@ export const parseAddress = async (unparsedAddress: string): Promise<any> => {
   });
 
   if (!response.ok) {
-    throw new Error(`HTTP error: ${response.status}`);
+    throw new Error(`HTTP error: ${String(response.status)}`);
   }
-  const responseJson = await response.json();
+  const responseJson: NominatimResponse[] =
+    (await response.json()) as NominatimResponse[];
+
   if (Object.keys(responseJson).length === 0) {
-    return parseAddress(unparsedAddress.split(" ").slice(0, -1).join(" "));
+    // Remove the last word
+    const shortenedAddress = unparsedAddress.split(" ").slice(0, -1).join(" ");
+
+    // If we remove all words...
+    if (!shortenedAddress) {
+      // then it must be undefined
+      return undefined;
+    }
+
+    // Else some good ol' recursion
+    return parseAddress(shortenedAddress);
   } else {
     return decodeAddress(responseJson);
   }

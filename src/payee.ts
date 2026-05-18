@@ -1,9 +1,10 @@
+import { z } from "zod";
+
 import { getAddressFromText } from "./ai-parse";
 import { parseAddress } from "./parse-address";
 import { addPayee } from "./persistence";
 import { readImage } from "./read-image";
-import type { Address, Payee, PayeeRawAddress } from "./types";
-import { z } from "zod";
+import type { Payee, PayeeRawAddress } from "./types";
 
 const PayeeSchema = z.object({
   email: z.string(),
@@ -17,8 +18,8 @@ const PayeeSchema = z.object({
     county: z.string(),
     postcode: z.number(),
     country: z.string(),
-    countryCode: z.string()
-  })
+    countryCode: z.string(),
+  }),
 });
 
 export class PayeeInstance {
@@ -35,8 +36,13 @@ export class PayeeInstance {
   private async createPartialFromFile(fileName: string) {
     const text: string = await readImage(fileName);
     const payeeInfo: PayeeRawAddress = await getAddressFromText(text);
+    console.log(payeeInfo.rawAddress);
     if (payeeInfo.rawAddress) {
-      const addressParsed: Address = await parseAddress(payeeInfo.rawAddress);
+      const addressParsed = await parseAddress(payeeInfo.rawAddress);
+      if (!addressParsed) {
+        throw Error("Could not parse address");
+      }
+
       this.payee = {
         email: payeeInfo.email,
         orgName: payeeInfo.orgName,
@@ -48,9 +54,9 @@ export class PayeeInstance {
     }
   }
 
-  async export (): Promise<Payee> {
-    PayeeSchema.parse(this.payee)
-    return this.payee
+  export(): Payee {
+    PayeeSchema.parse(this.payee);
+    return this.payee;
   }
 
   print() {
