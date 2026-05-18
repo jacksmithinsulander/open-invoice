@@ -3,6 +3,42 @@ import { parseAddress } from "./parse-address";
 import { addPayee } from "./persistence";
 import { readImage } from "./read-image";
 import type { Address, Payee, PayeeRawAddress } from "./types";
+import { z } from "zod";
+
+// export interface Address {
+//   houseNumber?: number;
+//   road?: string;
+//   suburb?: string;
+//   city?: string;
+//   municipality?: string;
+//   county?: string;
+//   postcode?: number;
+//   country?: string;
+//   countryCode?: string;
+// }
+
+// export interface Payee {
+//   email?: string;
+//   address: Address;
+//   orgName?: string;
+//   taxNumber?: string;
+// }
+
+const PayeeSchema = z.object({
+  email: z.string(),
+  orgName: z.string(),
+  taxNumber: z.string(),
+  address: z.object({
+    houseNumber: z.number(),
+    road: z.string(),
+    suburb: z.string(),
+    municipality: z.string(),
+    county: z.string(),
+    postcode: z.number(),
+    country: z.string(),
+    countryCode: z.string()
+  })
+});
 
 export class PayeeInstance {
   constructor(public payee: Payee) {}
@@ -29,6 +65,11 @@ export class PayeeInstance {
 
       await addPayee(this.payee);
     }
+  }
+
+  async export (): Promise<Payee> {
+    PayeeSchema.parse(this.payee)
+    return this.payee
   }
 
   print() {
