@@ -5,25 +5,6 @@ import { readImage } from "./read-image";
 import type { Address, Payee, PayeeRawAddress } from "./types";
 import { z } from "zod";
 
-// export interface Address {
-//   houseNumber?: number;
-//   road?: string;
-//   suburb?: string;
-//   city?: string;
-//   municipality?: string;
-//   county?: string;
-//   postcode?: number;
-//   country?: string;
-//   countryCode?: string;
-// }
-
-// export interface Payee {
-//   email?: string;
-//   address: Address;
-//   orgName?: string;
-//   taxNumber?: string;
-// }
-
 const PayeeSchema = z.object({
   email: z.string(),
   orgName: z.string(),
