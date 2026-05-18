@@ -2,7 +2,6 @@ import { z } from "zod";
 
 import { getAddressFromText } from "./ai-parse";
 import { parseAddress } from "./parse-address";
-import { addPayee } from "./persistence";
 import { readImage } from "./read-image";
 import type { Payee, PayeeRawAddress } from "./types";
 
@@ -49,8 +48,6 @@ export class PayeeInstance {
         taxNumber: payeeInfo.taxNumber,
         address: addressParsed,
       };
-
-      await addPayee(this.payee);
     }
   }
 
