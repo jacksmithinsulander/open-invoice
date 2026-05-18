@@ -28,7 +28,7 @@ export interface Payee {
   email?: string;
   address: Address;
   orgName?: string;
-  taxNumber?: string
+  taxNumber?: string;
 }
 
 export interface PayeeRawAddress {

@@ -1,5 +1,6 @@
 import { mongoose, Schema } from "mongoose";
-import { Payee, Address } from "./types";
+
+import type { Address, Payee } from "./types";
 
 const addressSchema = new Schema<Address>({
   houseNumber: Number,
@@ -10,24 +11,22 @@ const addressSchema = new Schema<Address>({
   county: String,
   postcode: Number,
   country: String,
-  countryCode: String
-})
+  countryCode: String,
+});
 
 const PayeeSchema = new Schema<Payee>({
   email: String,
   address: addressSchema,
   orgName: String,
-  taxNumber: String
-})
+  taxNumber: String,
+});
 
 export const addPayee = async (payee: Payee) => {
-  await mongoose.connect('mongodb://127.0.0.1:27017/test');
+  await mongoose.connect("mongodb://127.0.0.1:27017/test");
   const Payee = mongoose.model("Payee", PayeeSchema);
 
   const payeeInstance = new Payee(payee);
   await payeeInstance.save();
-  //const payees = await Payee.find();
-  //console.log(payees)
-
-}
-
+  const payees = await Payee.find();
+  console.log(payees);
+};

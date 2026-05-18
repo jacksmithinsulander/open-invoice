@@ -1,9 +1,12 @@
 import ollama from "ollama";
-import { PayeeRawAddress } from "./types";
 
-const OLLAMA_MODEL = "deepseek-coder-v2:latest"
+import type { PayeeRawAddress } from "./types";
 
-export const getAddressFromText = async (rawUnparsedText: string): Promise<Payee> => {
+const OLLAMA_MODEL = "deepseek-coder-v2:latest";
+
+export const getAddressFromText = async (
+  rawUnparsedText: string,
+): Promise<Payee> => {
   const prompt = `
 Extract ONLY invoicing-related information from the text below.
 
@@ -38,18 +41,14 @@ ${rawUnparsedText}
   const aiResponse = await ollama.chat({
     model: OLLAMA_MODEL,
     format: "json",
-    messages: [{ role: 'user', content: prompt }], 
+    messages: [{ role: "user", content: prompt }],
   });
 
   const payee: PayeeRawAddress = JSON.parse(aiResponse.message.content);
 
   if (payee.rawAddress) {
-    payee.rawAddress = payee.rawAddress.replace(
-      /\bnr\.?\s*(\d+)/gi,
-      "$1"
-    );
+    payee.rawAddress = payee.rawAddress.replace(/\bnr\.?\s*(\d+)/gi, "$1");
   }
 
   return payee;
-}
-
+};

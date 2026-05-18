@@ -1,7 +1,8 @@
 import addressit from "addressit";
-import { Address, NominatimResponse } from "./types"
 
-const BASE_URL = "https://nominatim.openstreetmap.org/search?"
+import type { Address, NominatimResponse } from "./types";
+
+const BASE_URL = "https://nominatim.openstreetmap.org/search?";
 
 export const parseAddress = async (unparsedAddress: string): Promise<any> => {
   const firstRoundParsing = addressit(unparsedAddress);
@@ -14,21 +15,20 @@ export const parseAddress = async (unparsedAddress: string): Promise<any> => {
   const response = await fetch(url, {
     headers: {
       "User-Agent": "invoice-parser/1.0",
-      "Accept": "application/json",
-     },
+      Accept: "application/json",
+    },
   });
 
   if (!response.ok) {
     throw new Error(`HTTP error: ${response.status}`);
   }
   const responseJson = await response.json();
-  if (Object.keys(responseJson).length === 0 ) {
-    return parseAddress(unparsedAddress.split(" ").slice(0, -1).join(" "))
+  if (Object.keys(responseJson).length === 0) {
+    return parseAddress(unparsedAddress.split(" ").slice(0, -1).join(" "));
   } else {
-    
     return decodeAddress(responseJson);
   }
-}
+};
 
 function decodeAddress(data: NominatimResponse[]): Address | undefined {
   const addr = data[0]?.address;
@@ -38,9 +38,7 @@ function decodeAddress(data: NominatimResponse[]): Address | undefined {
   }
 
   return {
-    houseNumber: addr.house_number
-      ? Number(addr.house_number)
-      : undefined,
+    houseNumber: addr.house_number ? Number(addr.house_number) : undefined,
 
     road: addr.road,
     suburb: addr.suburb,
@@ -48,9 +46,7 @@ function decodeAddress(data: NominatimResponse[]): Address | undefined {
     municipality: addr.municipality,
     county: addr.county,
 
-    postcode: addr.postcode
-      ? Number(addr.postcode)
-      : undefined,
+    postcode: addr.postcode ? Number(addr.postcode) : undefined,
 
     country: addr.country,
 
