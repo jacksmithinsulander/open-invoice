@@ -1,16 +1,19 @@
 import { readImage } from "./read-image"
 import { getAddressFromText } from "./ai-parse"
-import { Payee } from "./types"
+import { Payee, PayeeRawAddress, Address } from "./types"
 import { parseAddress } from "./parse-address"
+import { addPayee } from "./persistence"
 
 const text: string = await readImage();
-const payeeInfo: Payee = await getAddressFromText(text);
-{ payeeInfo.rawAddress && console.log(await parseAddress(payeeInfo.rawAddress))}
+const payeeInfo: PayeeRawAddress = await getAddressFromText(text);
+if (payeeInfo.rawAddress) {
+  const addressParsed: Address = await parseAddress(payeeInfo.rawAddress);
+  const payee: Payee = {
+    email: payeeInfo.email,
+    orgName: payeeInfo.orgName,
+    taxNumber: payeeInfo.taxNumber,
+    address: addressParsed
+  }
 
-// const server = Bun.serve({
-//   routes: {
-//     "/api/status": new Response("Ok")
-//   },
-// });
-
-// console.log(`Server running at ${server.url}`);
+  await addPayee(payee);
+}

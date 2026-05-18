@@ -1,11 +1,11 @@
 import addressit from "addressit";
+import { Address, NominatimResponse } from "./types"
 
 const BASE_URL = "https://nominatim.openstreetmap.org/search?"
 
 export const parseAddress = async (unparsedAddress: string): Promise<any> => {
   const firstRoundParsing = addressit(unparsedAddress);
   const prepareForApiCall: string = firstRoundParsing.text.replace(/ /g, "+");
-  //const url = `${BASE_URL}q=${prepareForApiCall}`;
   const url = new URL(BASE_URL);
   url.searchParams.set("q", prepareForApiCall);
   url.searchParams.set("format", "jsonv2");
@@ -25,6 +25,35 @@ export const parseAddress = async (unparsedAddress: string): Promise<any> => {
   if (Object.keys(responseJson).length === 0 ) {
     return parseAddress(unparsedAddress.split(" ").slice(0, -1).join(" "))
   } else {
-    return responseJson;
+    
+    return decodeAddress(responseJson);
   }
+}
+
+function decodeAddress(data: NominatimResponse[]): Address | undefined {
+  const addr = data[0]?.address;
+
+  if (!addr) {
+    return undefined;
+  }
+
+  return {
+    houseNumber: addr.house_number
+      ? Number(addr.house_number)
+      : undefined,
+
+    road: addr.road,
+    suburb: addr.suburb,
+    city: addr.city,
+    municipality: addr.municipality,
+    county: addr.county,
+
+    postcode: addr.postcode
+      ? Number(addr.postcode)
+      : undefined,
+
+    country: addr.country,
+
+    countryCode: addr.country_code,
+  };
 }

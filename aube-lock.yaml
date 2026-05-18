@@ -19,6 +19,7 @@ time:
   '@humanwhocodes/module-importer@1.0.1': 2022-08-18T17:55:51.038Z
   '@humanwhocodes/retry@0.4.3': 2025-05-07T14:25:57.372Z
   '@libpdf/core@0.3.4': 2026-03-21T02:54:38.901Z
+  '@mongodb-js/saslprep@1.4.11': 2026-05-03T16:53:24.822Z
   '@noble/ciphers@2.2.0': 2026-04-11T21:34:50.735Z
   '@noble/hashes@1.4.0': 2024-03-14T06:24:10.888Z
   '@noble/hashes@2.2.0': 2026-04-11T17:09:41.131Z
@@ -28,6 +29,8 @@ time:
   '@types/estree@1.0.9': 2026-05-06T21:01:00.975Z
   '@types/json-schema@7.0.15': 2023-11-07T08:49:23.527Z
   '@types/node@25.7.0': 2026-05-11T20:06:54.429Z
+  '@types/webidl-conversions@7.0.3': 2023-11-07T19:01:40.929Z
+  '@types/whatwg-url@13.0.0': 2024-11-12T00:46:37.942Z
   '@typescript-eslint/eslint-plugin@8.59.3': 2026-05-11T17:41:15.039Z
   '@typescript-eslint/parser@8.59.3': 2026-05-11T17:40:54.181Z
   '@typescript-eslint/project-service@8.59.3': 2026-05-11T17:40:31.391Z
@@ -46,6 +49,7 @@ time:
   balanced-match@4.0.4: 2026-02-22T11:38:25.951Z
   bmp-js@0.1.0: 2018-04-23T05:00:40.902Z
   brace-expansion@5.0.6: 2026-05-08T05:41:43.205Z
+  bson@7.2.0: 2026-02-03T19:22:27.139Z
   bun-types@1.3.14: 2026-05-13T03:59:57.888Z
   bytestreamjs@2.0.1: 2022-09-07T13:37:37.477Z
   cog@1.1.0: 2015-03-27T06:30:04.911Z
@@ -85,11 +89,18 @@ time:
   json-buffer@3.0.1: 2018-09-10T19:02:16.381Z
   json-schema-traverse@0.4.1: 2018-06-10T08:42:05.056Z
   json-stable-stringify-without-jsonify@1.0.1: 2016-12-15T22:00:35.805Z
+  kareem@3.3.0: 2026-04-14T14:53:11.932Z
   keyv@4.5.4: 2023-10-07T16:53:54.487Z
   levn@0.4.1: 2020-04-04T02:05:31.527Z
   locate-path@6.0.0: 2020-08-10T17:49:10.766Z
   lru-cache@11.3.6: 2026-05-04T15:35:22.273Z
+  memory-pager@1.5.0: 2019-01-09T15:38:24.901Z
   minimatch@10.2.5: 2026-03-30T18:08:07.247Z
+  mongodb-connection-string-url@7.0.1: 2026-01-26T18:25:24.735Z
+  mongodb@7.2.0: 2026-04-20T15:29:30.008Z
+  mongoose@9.6.2: 2026-05-08T17:22:58.270Z
+  mpath@0.9.0: 2022-04-17T15:29:10.331Z
+  mquery@6.0.0: 2025-11-18T15:47:14.895Z
   ms@2.1.3: 2020-12-08T13:54:35.223Z
   natural-compare@1.4.0: 2016-07-22T20:48:12.217Z
   node-fetch@2.7.0: 2023-08-23T17:18:39.396Z
@@ -112,10 +123,13 @@ time:
   semver@7.8.0: 2026-05-08T20:31:22.678Z
   shebang-command@2.0.0: 2019-09-06T14:53:25.901Z
   shebang-regex@3.0.0: 2019-04-27T10:46:19.256Z
+  sift@17.1.3: 2024-04-17T12:57:03.352Z
+  sparse-bitfield@3.0.3: 2017-03-05T00:17:45.769Z
   tesseract.js-core@7.0.0: 2025-12-15T02:37:00.864Z
   tesseract.js@7.0.0: 2025-12-15T03:37:59.222Z
   tinyglobby@0.2.16: 2026-04-07T23:37:03.457Z
   tr46@0.0.3: 2016-01-20T02:08:54.875Z
+  tr46@5.1.1: 2025-04-17T00:47:38.158Z
   ts-api-utils@2.5.0: 2026-03-19T02:50:49.789Z
   tslib@2.8.1: 2024-10-31T22:42:48.624Z
   type-check@0.4.0: 2020-04-03T03:02:37.249Z
@@ -125,7 +139,9 @@ time:
   uri-js@4.4.1: 2021-01-10T00:43:12.666Z
   wasm-feature-detect@1.8.0: 2024-09-18T17:22:09.229Z
   webidl-conversions@3.0.1: 2016-01-04T06:08:05.108Z
+  webidl-conversions@7.0.0: 2021-09-12T01:03:06.782Z
   whatwg-fetch@3.6.20: 2023-12-13T23:16:24.862Z
+  whatwg-url@14.2.0: 2025-03-15T07:12:41.904Z
   whatwg-url@5.0.0: 2017-05-26T20:56:41.955Z
   which@2.0.2: 2019-11-18T22:26:15.325Z
   word-wrap@1.2.5: 2023-07-22T14:37:38.795Z
@@ -145,6 +161,9 @@ importers:
       addressit:
         specifier: ^1.8.2
         version: 1.8.2
+      mongoose:
+        specifier: ^9.6.2
+        version: 9.6.2
       ollama:
         specifier: ^0.6.3
         version: 0.6.3
@@ -253,6 +272,9 @@ packages:
       '@google-cloud/secret-manager':
         optional: true
 
+  '@mongodb-js/saslprep@1.4.11':
+    resolution: {integrity: sha512-o9rAHc0IpIjuPSxRutWpE1F62x7n+4mVS4rCNHkzhIUMQcc18bb6xEq5wd2NdN0WjepIyXIppRshYI2kQDOZVA==}
+
   '@noble/ciphers@2.2.0':
     resolution: {integrity: sha512-Z6pjIZ/8IJcCGzb2S/0Px5J81yij85xASuk1teLNeg75bfT07MV3a/O2Mtn1I2se43k3lkVEcFaR10N4cgQcZA==}
     engines: {node: '>= 20.19.0'}
@@ -282,6 +304,12 @@ packages:
 
   '@types/node@25.7.0':
     resolution: {integrity: sha512-z+pdZyxE+RTQE9AcboAZCb4otwcrvgHD+GlBpPgn0emDVt0ohrTMhAwlr2Wd9nZ+nihhYFxO2pThz3C5qSu2Eg==}
+
+  '@types/webidl-conversions@7.0.3':
+    resolution: {integrity: sha512-CiJJvcRtIgzadHCYXw7dqEnMNRjhGZlYK05Mj9OyktqV8uVT8fD2BFOB7S1uwBE3Kj2Z+4UyPmFw/Ixgw/LAlA==}
+
+  '@types/whatwg-url@13.0.0':
+    resolution: {integrity: sha512-N8WXpbE6Wgri7KUSvrmQcqrMllKZ9uxkYWMt+mCSGwNc0Hsw9VQTW7ApqI4XNrx6/SaM2QQJCzMPDEXE058s+Q==}
 
   '@typescript-eslint/eslint-plugin@8.59.3':
     resolution: {integrity: sha512-PwFvSKsXGShKGW6n5bZOhGHEcCZXM8HofLK9fNsEwZXzFRjoY+XT1Vsf1zgyXdwTr0ZYz1/2tkZ0DBTT9jZjhw==}
@@ -372,6 +400,10 @@ packages:
   brace-expansion@5.0.6:
     resolution: {integrity: sha512-kLpxurY4Z4r9sgMsyG0Z9uzsBlgiU/EFKhj/h91/8yHu0edo7XuixOIH3VcJ8kkxs6/jPzoI6U9Vj3WqbMQ94g==}
     engines: {node: 18 || 20 || >=22}
+
+  bson@7.2.0:
+    resolution: {integrity: sha512-YCEo7KjMlbNlyHhz7zAZNDpIpQbd+wOEHJYezv0nMYTn4x31eIUM2yomNNubclAt63dObUzKHWsBLJ9QcZNSnQ==}
+    engines: {node: '>=20.19.0'}
 
   bun-types@1.3.14:
     resolution: {integrity: sha512-4N0ig0fEomHt5R0KCFWjovxow98rIoRwKolrYdCcknNwMekCXRnWEUvgu5soYV8QXtVsrUD8B95MBOZGPvr6KQ==}
@@ -536,6 +568,10 @@ packages:
   json-stable-stringify-without-jsonify@1.0.1:
     resolution: {integrity: sha512-Bdboy+l7tA3OGW6FjyFHWkP5LuByj1Tk33Ljyq0axyzdk9//JSi2u3fP1QSmd1KNwq6VOKYGlAu87CisVir6Pw==}
 
+  kareem@3.3.0:
+    resolution: {integrity: sha512-kpSuLD3/7RenBnjnJdOHXCKC8dTd1JzeOiJhN0necWWci6cC+qX+VuwPnMVgb+a4+KNJSfgqahpnfWaeDXCimw==}
+    engines: {node: '>=18.0.0'}
+
   keyv@4.5.4:
     resolution: {integrity: sha512-oxVHkHR/EJf2CNXnWxRLW6mg7JyCCUcG0DtEGmL2ctUo1PNTin1PUil+r/+4r5MpVgC/fn1kjsx7mjSujKqIpw==}
 
@@ -551,9 +587,55 @@ packages:
     resolution: {integrity: sha512-Gf/KoL3C/MlI7Bt0PGI9I+TeTC/I6r/csU58N4BSNc4lppLBeKsOdFYkK+dX0ABDUMJNfCHTyPpzwwO21Awd3A==}
     engines: {node: 20 || >=22}
 
+  memory-pager@1.5.0:
+    resolution: {integrity: sha512-ZS4Bp4r/Zoeq6+NLJpP+0Zzm0pR8whtGPf1XExKLJBAczGMnSi3It14OiNCStjQjM6NU1okjQGSxgEZN8eBYKg==}
+
   minimatch@10.2.5:
     resolution: {integrity: sha512-MULkVLfKGYDFYejP07QOurDLLQpcjk7Fw+7jXS2R2czRQzR56yHRveU5NDJEOviH+hETZKSkIk5c+T23GjFUMg==}
     engines: {node: 18 || 20 || >=22}
+
+  mongodb-connection-string-url@7.0.1:
+    resolution: {integrity: sha512-h0AZ9A7IDVwwHyMxmdMXKy+9oNlF0zFoahHiX3vQ8e3KFcSP3VmsmfvtRSuLPxmyv2vjIDxqty8smTgie/SNRQ==}
+    engines: {node: '>=20.19.0'}
+
+  mongodb@7.2.0:
+    resolution: {integrity: sha512-F/2+BMZtLVhY30ioZp0dAmZ+IRZMBqI+nrv6t5+9/1AIwCa8sMRC3jBf81lpxMhnZgqq8CoUD503Z1oZWq1/sw==}
+    engines: {node: '>=20.19.0'}
+    peerDependencies:
+      '@aws-sdk/credential-providers': ^3.806.0
+      '@mongodb-js/zstd': ^7.0.0
+      gcp-metadata: ^7.0.1
+      kerberos: ^7.0.0
+      mongodb-client-encryption: '>=7.0.0 <7.1.0'
+      snappy: ^7.3.2
+      socks: ^2.8.6
+    peerDependenciesMeta:
+      '@aws-sdk/credential-providers':
+        optional: true
+      '@mongodb-js/zstd':
+        optional: true
+      gcp-metadata:
+        optional: true
+      kerberos:
+        optional: true
+      mongodb-client-encryption:
+        optional: true
+      snappy:
+        optional: true
+      socks:
+        optional: true
+
+  mongoose@9.6.2:
+    resolution: {integrity: sha512-7m8HntjkoRnwEmuPC0kdlwcZXJOQf4twumFj+PNzg/anqqZE2Er7hQslqyzy07mP3JcFjoTSgH5765PyqOXsxw==}
+    engines: {node: '>=20.19.0'}
+
+  mpath@0.9.0:
+    resolution: {integrity: sha512-ikJRQTk8hw5DEoFVxHG1Gn9T/xcjtdnOKIU1JTmGjZZlg9LST2mBLmcX3/ICIbgJydT2GOc15RnNy5mHmzfSew==}
+    engines: {node: '>=4.0.0'}
+
+  mquery@6.0.0:
+    resolution: {integrity: sha512-b2KQNsmgtkscfeDgkYMcWGn9vZI9YoXh802VDEwE6qc50zxBFQ0Oo8ROkawbPAsXCY1/Z1yp0MagqsZStPWJjw==}
+    engines: {node: '>=20.19.0'}
 
   ms@2.1.3:
     resolution: {integrity: sha512-6FlzubTLZG3J2a/NVCAleEhjzq5oxgHyaCU9yYXvcLsvoVaHJq/s5xXI6/XXP6tz7R9xAOtHnSO/tXtF3WRTlA==}
@@ -644,6 +726,12 @@ packages:
     resolution: {integrity: sha512-7++dFhtcx3353uBaq8DDR4NuxBetBzC7ZQOhmTQInHEd6bSrXdiEyzCvG07Z44UYdLShWUyXt5M/yhz8ekcb1A==}
     engines: {node: '>=8'}
 
+  sift@17.1.3:
+    resolution: {integrity: sha512-Rtlj66/b0ICeFzYTuNvX/EF1igRbbnGSvEyT79McoZa/DeGhMyC5pWKOEsZKnpkqtSeovd5FL/bjHWC3CIIvCQ==}
+
+  sparse-bitfield@3.0.3:
+    resolution: {integrity: sha512-kvzhi7vqKTfkh0PZU+2D2PIllw2ymqJKujUcyPMd9Y75Nv4nPbGJZXNhxsgdQab2BmlDct1YnfQCguEvHr7VsQ==}
+
   tesseract.js-core@7.0.0:
     resolution: {integrity: sha512-WnNH518NzmbSq9zgTPeoF8c+xmilS8rFIl1YKbk/ptuuc7p6cLNELNuPAzcmsYw450ca6bLa8j3t0VAtq435Vw==}
 
@@ -656,6 +744,10 @@ packages:
 
   tr46@0.0.3:
     resolution: {integrity: sha512-N3WMsuqV66lT30CrXNbEjx4GEwlow3v6rr4mCcv6prnfwhS01rkgyFdjPNBYd9br7LpXV1+Emh01fHnq2Gdgrw==}
+
+  tr46@5.1.1:
+    resolution: {integrity: sha512-hdF5ZgjTqgAntKkklYw0R03MG2x/bSzTtkxmIRw/sTNV8YXsCJ1tfLAX23lhxhHJlEf3CRCOCGGWw3vI3GaSPw==}
+    engines: {node: '>=18'}
 
   ts-api-utils@2.5.0:
     resolution: {integrity: sha512-OJ/ibxhPlqrMM0UiNHJ/0CKQkoKF243/AEmplt3qpRgkW8VG7IfOS41h7V8TjITqdByHzrjcS/2si+y4lIh8NA==}
@@ -694,8 +786,16 @@ packages:
   webidl-conversions@3.0.1:
     resolution: {integrity: sha512-2JAn3z8AR6rjK8Sm8orRC0h/bcl/DqL7tRPdGZ4I1CjdF+EaMLmYxBHyXuKL849eucPFhvBoxMsflfOb8kxaeQ==}
 
+  webidl-conversions@7.0.0:
+    resolution: {integrity: sha512-VwddBukDzu71offAQR975unBIGqfKZpM+8ZX6ySk8nYhVoo5CYaZyzt3YBvYtRtO+aoGlqxPg/B87NGVZ/fu6g==}
+    engines: {node: '>=12'}
+
   whatwg-fetch@3.6.20:
     resolution: {integrity: sha512-EqhiFU6daOA8kpjOWTL0olhVOF3i7OrFzSYiGsEMB8GcXS+RrzauAERX65xMeNWVqxA6HXH2m69Z9LaKKdisfg==}
+
+  whatwg-url@14.2.0:
+    resolution: {integrity: sha512-De72GdQZzNTUBBChsXueQUnPKDkg/5A5zp7pFDuQAj5UFoENpiACU0wlCvzpAGnTkj++ihpKwKyYewn/XNUbKw==}
+    engines: {node: '>=18'}
 
   whatwg-url@5.0.0:
     resolution: {integrity: sha512-saE57nupxk6v3HY35+jzBwYa0rKSy0XR8JSxZPwgLr7ys0IBzhGviA1/TUGJLmSVqs8pb9AnvICXEuOHLprYTw==}
@@ -777,6 +877,10 @@ snapshots:
       pako: 2.1.0
       pkijs: 3.4.0
 
+  '@mongodb-js/saslprep@1.4.11':
+    dependencies:
+      sparse-bitfield: 3.0.3
+
   '@noble/ciphers@2.2.0': {}
 
   '@noble/hashes@1.4.0': {}
@@ -798,6 +902,12 @@ snapshots:
   '@types/node@25.7.0':
     dependencies:
       undici-types: 7.21.0
+
+  '@types/webidl-conversions@7.0.3': {}
+
+  '@types/whatwg-url@13.0.0':
+    dependencies:
+      '@types/webidl-conversions': 7.0.3
   ? '@typescript-eslint/eslint-plugin@8.59.3(@typescript-eslint/parser@8.59.3(eslint@10.4.0)(typescript@6.0.3))(eslint@10.4.0)(typescript@6.0.3)'
 
   : dependencies:
@@ -908,6 +1018,8 @@ snapshots:
   brace-expansion@5.0.6:
     dependencies:
       balanced-match: 4.0.4
+
+  bson@7.2.0: {}
 
   bun-types@1.3.14:
     dependencies:
@@ -1058,6 +1170,8 @@ snapshots:
 
   json-stable-stringify-without-jsonify@1.0.1: {}
 
+  kareem@3.3.0: {}
+
   keyv@4.5.4:
     dependencies:
       json-buffer: 3.0.1
@@ -1073,9 +1187,35 @@ snapshots:
 
   lru-cache@11.3.6: {}
 
+  memory-pager@1.5.0: {}
+
   minimatch@10.2.5:
     dependencies:
       brace-expansion: 5.0.6
+
+  mongodb-connection-string-url@7.0.1:
+    dependencies:
+      '@types/whatwg-url': 13.0.0
+      whatwg-url: 14.2.0
+
+  mongodb@7.2.0:
+    dependencies:
+      '@mongodb-js/saslprep': 1.4.11
+      bson: 7.2.0
+      mongodb-connection-string-url: 7.0.1
+
+  mongoose@9.6.2:
+    dependencies:
+      kareem: 3.3.0
+      mongodb: 7.2.0
+      mpath: 0.9.0
+      mquery: 6.0.0
+      ms: 2.1.3
+      sift: 17.1.3
+
+  mpath@0.9.0: {}
+
+  mquery@6.0.0: {}
 
   ms@2.1.3: {}
 
@@ -1147,6 +1287,12 @@ snapshots:
 
   shebang-regex@3.0.0: {}
 
+  sift@17.1.3: {}
+
+  sparse-bitfield@3.0.3:
+    dependencies:
+      memory-pager: 1.5.0
+
   tesseract.js-core@7.0.0: {}
 
   tesseract.js@7.0.0:
@@ -1167,6 +1313,10 @@ snapshots:
       picomatch: 4.0.4
 
   tr46@0.0.3: {}
+
+  tr46@5.1.1:
+    dependencies:
+      punycode: 2.3.1
 
   ts-api-utils@2.5.0(typescript@6.0.3):
     dependencies:
@@ -1199,7 +1349,14 @@ snapshots:
 
   webidl-conversions@3.0.1: {}
 
+  webidl-conversions@7.0.0: {}
+
   whatwg-fetch@3.6.20: {}
+
+  whatwg-url@14.2.0:
+    dependencies:
+      tr46: 5.1.1
+      webidl-conversions: 7.0.0
 
   whatwg-url@5.0.0:
     dependencies:

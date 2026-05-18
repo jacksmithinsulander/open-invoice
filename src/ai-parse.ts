@@ -1,5 +1,5 @@
 import ollama from "ollama";
-import { Payee } from "./types";
+import { PayeeRawAddress } from "./types";
 
 const OLLAMA_MODEL = "deepseek-coder-v2:latest"
 
@@ -28,6 +28,7 @@ Rules:
 - Extract the most relevant invoicing entity if multiple entities appear.
 - Never hallucinate or infer missing values.
 - If there are street numbers that in this picture happen to have any prefix like "nr", remove that and just use the raw number as a separate word, so change for example "nr5" to "5", or "nr.5" to "5"
+- If there is any spelling error that you can see based on your knowledge, please make sure to correct this
 
 Text to analyze:
 """
@@ -40,7 +41,7 @@ ${rawUnparsedText}
     messages: [{ role: 'user', content: prompt }], 
   });
 
-  const payee: Payee = JSON.parse(aiResponse.message.content);
+  const payee: PayeeRawAddress = JSON.parse(aiResponse.message.content);
 
   if (payee.rawAddress) {
     payee.rawAddress = payee.rawAddress.replace(

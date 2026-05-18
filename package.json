@@ -23,6 +23,7 @@
   "dependencies": {
     "@libpdf/core": "^0.3.4",
     "addressit": "^1.8.2",
+    "mongoose": "^9.6.2",
     "ollama": "^0.6.3",
     "tesseract.js": "^7.0.0"
   }
