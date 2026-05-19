@@ -1,5 +1,4 @@
 import { z } from "zod";
-
 import { getAddressFromText } from "./ai-parse";
 import { parseAddress } from "./parse-address";
 import { readImage } from "./read-image";
@@ -22,6 +21,20 @@ const PayeeSchema = z.object({
 });
 
 export class PayeeInstance {
+  private requiredFields = [
+    "email",
+    "orgName",
+    "taxNumber",
+    "address.houseNumber",
+    "address.road",
+    "address.suburb",
+    "address.municipality",
+    "address.county",
+    "address.postcode",
+    "address.country",
+    "address.countryCode",
+  ];
+
   constructor(public payee: Payee) {}
 
   static async init(fileName: string): Promise<PayeeInstance> {
@@ -58,5 +71,52 @@ export class PayeeInstance {
 
   print() {
     console.log(this.payee);
+  }
+
+  getMissingFields(): string[] {
+    return this.requiredFields.filter((path) => {
+      const value = path
+        .split(".")
+        .reduce<any>((obj, key) => obj?.[key], this.payee);
+
+      return value === undefined || value === null || value === "";
+    });
+  }
+
+  private setField(path: string, value: unknown): void {
+    const keys = path.split(".");
+    let current: any = this.payee;
+
+    for (let i = 0; i < keys.length - 1; i++) {
+      const key = keys[i];
+
+      if (!current[key]) {
+        current[key] = {};
+      }
+
+      current = current[key];
+    }
+
+    current[keys[keys.length - 1]] = value;
+  }
+
+  setMissingField(path: string, value: unknown): void {
+    if (!this.requiredFields.includes(path)) {
+      throw new Error(`Unknown required field: ${path}`);
+    }
+
+    const missingFields = this.getMissingFields();
+
+    if (!missingFields.includes(path)) {
+      throw new Error(`Field is already set: ${path}`);
+    }
+
+    this.setField(path, value);
+  }
+
+  setMissingFields(values: Record<string, unknown>): void {
+    for (const [path, value] of Object.entries(values)) {
+      this.setMissingField(path, value);
+    }
   }
 }
