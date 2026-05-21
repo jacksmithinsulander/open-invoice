@@ -1,7 +1,13 @@
 import mongoose, { type Model, Schema } from "mongoose";
-
+import dotenv from "dotenv";
 import { PayeeInstance } from "./payee";
 import type { Address, Payee } from "./types";
+
+dotenv.config();
+
+const MONGO_URI = `mongodb://${process.env.MONGO_USER}:${process.env.MONGO_PASS}@${process.env.MONGO_PORT}/${process.env.MONGO_APP}?authSource=admin`;
+
+console.log("Mongo uri:", MONGO_URI);
 
 const addressSchema = new Schema<Address>({
   houseNumber: Number,
@@ -37,7 +43,7 @@ export class PayeeRepository {
     if (
       mongoose.connection.readyState === mongoose.ConnectionStates.disconnected
     ) {
-      await mongoose.connect("mongodb://127.0.0.1:27017/test");
+      await mongoose.connect(MONGO_URI);
     }
   }
 

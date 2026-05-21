@@ -1,8 +1,14 @@
+import dotenv from "dotenv";
 import ollama from "ollama";
-
 import type { PayeeRawAddress } from "./types";
 
-const OLLAMA_MODEL = "deepseek-coder-v2:latest";
+dotenv.config();
+
+const OLLAMA_MODEL = process.env.AI_MODEL;
+
+if (!OLLAMA_MODEL) {
+  throw new Error("Could not load ollama model");
+}
 
 export const getAddressFromText = async (
   rawUnparsedText: string,
@@ -28,6 +34,7 @@ Rules:
 - "rawAddress" should contain the full extracted address as a single string.
 - "orgName" should contain the legal or recognizable invoicing entity name.
 - "taxNumber" should include VAT number, organization number, tax ID, or similar identifiers.
+- "email" should contain any email address you can gather from the text
 - Extract the most relevant invoicing entity if multiple entities appear.
 - Never hallucinate or infer missing values.
 - If there are street numbers that in this picture happen to have any prefix like "nr", remove that and just use the raw number as a separate word, so change for example "nr5" to "5", or "nr.5" to "5"
