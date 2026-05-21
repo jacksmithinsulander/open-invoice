@@ -1,5 +1,6 @@
 import dotenv from "dotenv";
 import ollama from "ollama";
+
 import type { PayeeRawAddress } from "./types";
 
 dotenv.config();

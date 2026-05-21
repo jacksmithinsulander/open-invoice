@@ -1,11 +1,12 @@
-import mongoose, { type Model, Schema } from "mongoose";
 import dotenv from "dotenv";
+import mongoose, { type Model, Schema } from "mongoose";
+
 import { PayeeInstance } from "./payee";
 import type { Address, Payee } from "./types";
 
 dotenv.config();
 
-const MONGO_URI = `mongodb://${process.env.MONGO_USER}:${process.env.MONGO_PASS}@${process.env.MONGO_PORT}/${process.env.MONGO_APP}?authSource=admin`;
+const MONGO_URI = `mongodb://${process.env.MONGO_USER}:${process.env.MONGO_PASS}@${process.env.MONGO_PORT}/${process.env.MONGO_APP}?authSource=${process.env.MONGO_APP}`;
 
 console.log("Mongo uri:", MONGO_URI);
 
