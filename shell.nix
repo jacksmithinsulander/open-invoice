@@ -13,6 +13,7 @@ pkgs.mkShellNoCC {
     mongosh
     imagemagick
     ollama
+    procps
   ];
 
   shellHook = ''
@@ -20,6 +21,17 @@ pkgs.mkShellNoCC {
       set -a
       source .env
       set +a
+    fi
+
+    mkdir -p ./.mongodb
+
+    if ! pgrep -f "mongod.*./.mongodb" > /dev/null; then
+      mongod \
+        --dbpath ./.mongodb \
+        --bind_ip 127.0.0.1 \
+        --port 27017 \
+        --logpath ./.mongodb/db.log \
+        --logappend &
     fi
 
     mongosh "$MONGO_APP" --eval "

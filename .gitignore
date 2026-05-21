@@ -68,3 +68,4 @@ package-lock.json
 src/clujaddress.png
 src/clujaddress.jpg
 .env
+.mongodb
