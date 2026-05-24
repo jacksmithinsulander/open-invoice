@@ -26,7 +26,7 @@ export interface Address {
 
 export interface Payee {
   email?: string;
-  address: Address;
+  address?: Address;
   orgName?: string;
   taxNumber?: string;
 }

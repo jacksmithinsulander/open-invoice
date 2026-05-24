@@ -67,19 +67,24 @@ export class PayeeRepository {
     }
   }
 
-  async getContact(contactName: string): Promise<PayeeInstance | null> {
+  async getPayee(payeeName: string): Promise<PayeeInstance> {
     await this.connect();
     try {
-      const myContact = await this.model
-        .findOne({ orgName: contactName })
+      const myPayee = await this.model
+        .findOne({ orgName: payeeName })
         .exec();
-      return myContact ? new PayeeInstance(myContact.toObject()) : null;
+
+      if (!myPayee) {
+        throw new Error(`Payee ${payeeName} not found`);
+      }
+
+      return new PayeeInstance(myPayee.toObject());
     } catch (err: unknown) {
       throw err;
     }
   }
 
-  async getContacts(): Promise<PayeeInstance[]> {
+  async getPayees(): Promise<PayeeInstance[]> {
     await this.connect();
 
     try {
