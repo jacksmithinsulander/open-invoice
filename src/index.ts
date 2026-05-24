@@ -1,23 +1,24 @@
-import { PayeeInstance } from "./payee";
+import type { PayeeInstance } from "./payee";
 import { PayeeRepository } from "./persistence";
-import { Payee } from "./types";
-
+import type { Payee } from "./types";
 
 const server = Bun.serve({
   routes: {
     "/api/status": new Response("OK"),
-    "/api/payee/:payeeName": async req => {
-      const payeeNameDecoded: string =  decodeURIComponent(req.params.payeeName);
+    "/api/payee/:payeeName": async (req) => {
+      const payeeNameDecoded: string = decodeURIComponent(req.params.payeeName);
       const payeeRepository = new PayeeRepository();
-      const repositoryLookup: PayeeInstance = await payeeRepository.getPayee(payeeNameDecoded);
+      const repositoryLookup: PayeeInstance =
+        await payeeRepository.getPayee(payeeNameDecoded);
       const payee: Payee = repositoryLookup.payee;
-      return Response.json(payee)
+      return Response.json(payee);
     },
     "/api/payees": async () => {
       const payeeRepository = new PayeeRepository();
-      const repositoryLookup: PayeeInstance[] = await payeeRepository.getPayees();
-      const payees = repositoryLookup.map((entry) => entry.payee)
-      return Response.json(payees)
+      const repositoryLookup: PayeeInstance[] =
+        await payeeRepository.getPayees();
+      const payees = repositoryLookup.map((entry) => entry.payee);
+      return Response.json(payees);
     },
   },
   fetch(req) {

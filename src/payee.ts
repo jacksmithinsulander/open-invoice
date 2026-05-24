@@ -39,7 +39,7 @@ export class PayeeInstance {
   constructor(public payee: Payee) {}
 
   static async init(fileName: string): Promise<PayeeInstance> {
-    const instance = new PayeeInstance({} as Payee);
+    const instance = new PayeeInstance({});
 
     await instance.createPartialFromFile(fileName);
 
@@ -70,10 +70,6 @@ export class PayeeInstance {
     return this.payee;
   }
 
-  print() {
-    console.log(this.payee);
-  }
-
   getMissingFields(): string[] {
     return this.requiredFields.filter((path) => {
       const value = path
@@ -84,7 +80,7 @@ export class PayeeInstance {
     });
   }
 
-  private setField(path: string, value: unknown): void {
+  private setField(path: string, value: string | number): Payee {
     const keys = path.split(".");
     let current: any = this.payee;
 
@@ -99,9 +95,11 @@ export class PayeeInstance {
     }
 
     current[keys[keys.length - 1]] = value;
+
+    return this.payee;
   }
 
-  setMissingField(path: string, value: unknown): void {
+  setMissingField(path: string, value: string | number): Payee {
     if (!this.requiredFields.includes(path)) {
       throw new Error(`Unknown required field: ${path}`);
     }
@@ -112,10 +110,10 @@ export class PayeeInstance {
       throw new Error(`Field is already set: ${path}`);
     }
 
-    this.setField(path, value);
+    return this.setField(path, value);
   }
 
-  setMissingFields(values: Record<string, unknown>): void {
+  setMissingFields(values: Record<string, string | number>): void {
     for (const [path, value] of Object.entries(values)) {
       this.setMissingField(path, value);
     }

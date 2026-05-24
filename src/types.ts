@@ -37,3 +37,18 @@ export interface PayeeRawAddress {
   orgName?: string;
   taxNumber?: string;
 }
+
+export enum PayeeFields {
+  Email = "email",
+  OrgName = "orgName",
+  TaxNumber = "taxNumber",
+  HouseNumber = "address.houseNumber",
+  Road = "address.road",
+  Suburb = "address.suburb",
+  City = "address.city",
+  Municipality = "address.municipality",
+  County = "address.county",
+  Postcode = "address.postcode",
+  Country = "address.country",
+  CountryCode = "address.countryCode",
+}
