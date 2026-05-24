@@ -17,7 +17,7 @@ const addressSchema = new Schema<Address>({
   city: String,
   municipality: String,
   county: String,
-  postcode: Number,
+  postcode: String,
   country: String,
   countryCode: String,
 });
@@ -63,6 +63,29 @@ export class PayeeRepository {
         throw new Error("Payee already exists", { cause: err });
       }
 
+      throw err;
+    }
+  }
+
+  async getContact(contactName: string): Promise<PayeeInstance | null> {
+    await this.connect();
+    try {
+      const myContact = await this.model
+        .findOne({ orgName: contactName })
+        .exec();
+      return myContact ? new PayeeInstance(myContact.toObject()) : null;
+    } catch (err: unknown) {
+      throw err;
+    }
+  }
+
+  async getContacts(): Promise<PayeeInstance[]> {
+    await this.connect();
+
+    try {
+      const myContacts = await this.model.find({}).exec();
+      return myContacts.map((contact) => new PayeeInstance(contact.toObject()));
+    } catch (err: unknown) {
       throw err;
     }
   }

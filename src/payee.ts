@@ -15,7 +15,7 @@ const PayeeSchema = z.object({
     suburb: z.string(),
     municipality: z.string(),
     county: z.string(),
-    postcode: z.number(),
+    postcode: z.string(),
     country: z.string(),
     countryCode: z.string(),
   }),

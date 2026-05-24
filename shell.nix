@@ -25,7 +25,7 @@ pkgs.mkShellNoCC {
 
     mkdir -p ./.mongodb
 
-    if ! pgrep -f "mongod.*./.mongodb" > /dev/null; then
+    if ! mongosh --quiet --eval "db.adminCommand('ping')" > /dev/null 2>&1; then
       mongod \
         --dbpath ./.mongodb \
         --bind_ip 127.0.0.1 \

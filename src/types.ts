@@ -19,7 +19,7 @@ export interface Address {
   city?: string;
   municipality?: string;
   county?: string;
-  postcode?: number;
+  postcode?: string;
   country?: string;
   countryCode?: string;
 }
