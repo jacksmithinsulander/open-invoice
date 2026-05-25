@@ -1,6 +1,9 @@
 {
   "type": "module",
+  "packageManager": "pnpm@10.14.0",
   "scripts": {
+    "clean": "turbo clean",
+    "build": "turbo build --concurrency 16",
     "dev": "bun --watch src/index.ts",
     "start": "bun src/index.ts",
     "typecheck": "tsc --noEmit",
@@ -17,6 +20,7 @@
     "eslint-plugin-unused-imports": "^4.4.1",
     "globals": "^17.6.0",
     "prettier": "^3.8.3",
+    "turbo": "^2.9.14",
     "typescript": "latest",
     "typescript-eslint": "^8.59.3"
   },
@@ -27,6 +31,7 @@
     "mongoose": "^9.6.2",
     "ollama": "^0.6.3",
     "tesseract.js": "^7.0.0",
+    "turbobuild": "^0.0.1",
     "zod": "^4.4.3"
   },
   "aube": {
