@@ -1,0 +1,4 @@
+
+> @ build /Users/jacksmith/prog/invoice
+> eslint . && tsc --noEmit
+

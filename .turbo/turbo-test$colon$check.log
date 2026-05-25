@@ -1,0 +1,11 @@
+
+
+> @ test:check /Users/jacksmith/prog/invoice
+> bun test --pass-with-no-tests
+
+[0m[1mbun test [0m[2mv1.3.14 (0d9b296a)[0m
+[33mNo tests found![0m
+
+Tests need ".test", "_test_", ".spec" or "_spec_" in the filename [2m(ex: "MyApp.test.ts")[0m
+
+Learn more about bun test: [35mhttps://bun.com/docs/cli/test[0m

@@ -7,7 +7,13 @@ async function main() {
   // Standard sizes: "letter", "a4", "legal"
   pdf.addPage({ size: "a4" });
 
-  pdf.getPage(0).drawText("Hello world", {
+  const firstPage = pdf.getPage(0);
+
+  if (!firstPage) {
+    throw new Error("Failed to create PDF page");
+  }
+
+  firstPage.drawText("Hello world", {
     x: 50,
     y: 700,
     size: 24,

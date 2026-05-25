@@ -21,7 +21,7 @@ const server = Bun.serve({
       return Response.json(payees);
     },
   },
-  fetch(req) {
+  fetch(_req) {
     return new Response("Not Found", { status: 404 });
   },
 });

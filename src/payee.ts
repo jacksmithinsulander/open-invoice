@@ -21,6 +21,24 @@ const PayeeSchema = z.object({
   }),
 });
 
+function isRecord(value: unknown): value is Record<string, unknown> {
+  return typeof value === "object" && value !== null;
+}
+
+function getPathValue(source: unknown, path: string): unknown {
+  let current = source;
+
+  for (const key of path.split(".")) {
+    if (!isRecord(current)) {
+      return undefined;
+    }
+
+    current = current[key];
+  }
+
+  return current;
+}
+
 export class PayeeInstance {
   private requiredFields = [
     "email",
@@ -72,9 +90,7 @@ export class PayeeInstance {
 
   getMissingFields(): string[] {
     return this.requiredFields.filter((path) => {
-      const value = path
-        .split(".")
-        .reduce<any>((obj, key) => obj?.[key], this.payee);
+      const value = getPathValue(this.payee, path);
 
       return value === undefined || value === null || value === "";
     });
@@ -82,19 +98,36 @@ export class PayeeInstance {
 
   private setField(path: string, value: string | number): Payee {
     const keys = path.split(".");
-    let current: any = this.payee;
+    const lastKey = keys[keys.length - 1];
 
-    for (let i = 0; i < keys.length - 1; i++) {
-      const key = keys[i];
-
-      if (!current[key]) {
-        current[key] = {};
-      }
-
-      current = current[key];
+    if (!lastKey) {
+      throw new Error(`Invalid field path: ${path}`);
     }
 
-    current[keys[keys.length - 1]] = value;
+    let current: unknown = this.payee;
+
+    for (const key of keys.slice(0, -1)) {
+      if (!isRecord(current)) {
+        throw new Error(`Invalid field path: ${path}`);
+      }
+
+      const next = current[key];
+
+      if (isRecord(next)) {
+        current = next;
+        continue;
+      }
+
+      const child: Record<string, unknown> = {};
+      current[key] = child;
+      current = child;
+    }
+
+    if (!isRecord(current)) {
+      throw new Error(`Invalid field path: ${path}`);
+    }
+
+    current[lastKey] = value;
 
     return this.payee;
   }

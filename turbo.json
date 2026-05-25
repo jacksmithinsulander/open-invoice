@@ -1,18 +1,17 @@
 {
   "$schema": "https://turbo.build/schema.json",
   "tasks": {
-    "build": {
-      "dependsOn": ["^build", "lint"],
-      "outputs": ["dist/**", ".next/**", "generated/**"],
+    "build:check": {
+      "dependsOn": ["^build:check", "lint:check", "test:check"],
+      "outputs": [],
     },
-    "lint": {},
-    "test": {
-      "dependsOn": ["^build"],
+    "lint:check": {},
+    "test:check": {
+      "dependsOn": ["^build:check"],
       "outputs": []
     },
     "release": {
-      "dependsOn": ["build", "test"]
+      "dependsOn": ["build:check"]
     }
   }
 }
-

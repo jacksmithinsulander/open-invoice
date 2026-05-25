@@ -11,9 +11,7 @@ type AddressItResult = {
 export const parseAddress = async (
   unparsedAddress: string,
 ): Promise<Address | undefined> => {
-  const firstRoundParsing: AddressItResult = addressit(
-    unparsedAddress,
-  ) as AddressItResult;
+  const firstRoundParsing: AddressItResult = addressit(unparsedAddress);
   const prepareForApiCall: string = firstRoundParsing.text.replace(/ /g, "+");
   const url = new URL(BASE_URL);
   url.searchParams.set("q", prepareForApiCall);
@@ -66,7 +64,7 @@ function decodeAddress(data: NominatimResponse[]): Address | undefined {
     municipality: addr.municipality,
     county: addr.county,
 
-    postcode: addr.postcode ? Number(addr.postcode) : undefined,
+    postcode: addr.postcode,
 
     country: addr.country,
 

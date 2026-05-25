@@ -3,14 +3,18 @@
   "packageManager": "pnpm@10.14.0",
   "scripts": {
     "clean": "turbo clean",
-    "build": "turbo build --concurrency 16",
+    "build": "turbo run build:check --concurrency 16",
+    "build:check": "tsc --noEmit",
     "dev": "bun --watch src/index.ts",
     "start": "bun src/index.ts",
     "typecheck": "tsc --noEmit",
     "format": "prettier . --write",
     "format:check": "prettier . --check",
-    "lint": "eslint .",
-    "lint:fix": "eslint . --fix"
+    "lint": "turbo run lint:check",
+    "lint:check": "eslint .",
+    "lint:fix": "eslint . --fix",
+    "test": "turbo run test:check",
+    "test:check": "bun test --pass-with-no-tests"
   },
   "devDependencies": {
     "@eslint/js": "^10.0.1",

@@ -6,7 +6,21 @@ import type { Address, Payee, PayeeFields } from "./types";
 
 dotenv.config();
 
-const MONGO_URI = `mongodb://${process.env.MONGO_USER}:${process.env.MONGO_PASS}@${process.env.MONGO_PORT}/${process.env.MONGO_APP}?authSource=${process.env.MONGO_APP}`;
+function getRequiredEnv(name: string): string {
+  const value = process.env[name];
+
+  if (!value) {
+    throw new Error(`Missing environment variable: ${name}`);
+  }
+
+  return value;
+}
+
+function getMongoUri(): string {
+  const app = getRequiredEnv("MONGO_APP");
+
+  return `mongodb://${getRequiredEnv("MONGO_USER")}:${getRequiredEnv("MONGO_PASS")}@${getRequiredEnv("MONGO_PORT")}/${app}?authSource=${app}`;
+}
 
 const addressSchema = new Schema<Address>({
   houseNumber: Number,
@@ -42,7 +56,7 @@ export class PayeeRepository {
     if (
       mongoose.connection.readyState === mongoose.ConnectionStates.disconnected
     ) {
-      await mongoose.connect(MONGO_URI);
+      await mongoose.connect(getMongoUri());
     }
   }
 
@@ -92,9 +106,7 @@ export class PayeeRepository {
     const result = await this.model.updateOne(
       { orgName: newPayeeObject.payee.orgName },
       {
-        $set: {
-          ...newPayeeObject,
-        },
+        $set: newPayeeObject.export(),
       },
     );
     if (result.matchedCount && result.matchedCount && result.acknowledged) {
@@ -108,27 +120,20 @@ export class PayeeRepository {
 
   async getPayee(payeeName: string): Promise<PayeeInstance> {
     await this.connect();
-    try {
-      const myPayee = await this.model.findOne({ orgName: payeeName }).exec();
 
-      if (!myPayee) {
-        throw new Error(`Payee ${payeeName} not found`);
-      }
+    const myPayee = await this.model.findOne({ orgName: payeeName }).exec();
 
-      return new PayeeInstance(myPayee.toObject());
-    } catch (err: unknown) {
-      throw err;
+    if (!myPayee) {
+      throw new Error(`Payee ${payeeName} not found`);
     }
+
+    return new PayeeInstance(myPayee.toObject());
   }
 
   async getPayees(): Promise<PayeeInstance[]> {
     await this.connect();
 
-    try {
-      const myContacts = await this.model.find({}).exec();
-      return myContacts.map((contact) => new PayeeInstance(contact.toObject()));
-    } catch (err: unknown) {
-      throw err;
-    }
+    const myContacts = await this.model.find({}).exec();
+    return myContacts.map((contact) => new PayeeInstance(contact.toObject()));
   }
 }

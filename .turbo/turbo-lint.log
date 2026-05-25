@@ -1,45 +1,19 @@
 
-
 > @ lint /Users/jacksmith/prog/invoice
 > eslint .
 
-[0m
-[4m/Users/jacksmith/prog/invoice/src/index.ts[24m
-  [2m24:9[22m  [31merror[39m    'req' is defined but never used. Allowed unused args must match /^_/u  [2m@typescript-eslint/no-unused-vars[22m
-  [2m29:1[22m  [33mwarning[39m  Unexpected console statement                                           [2mno-console[22m
 
-[4m/Users/jacksmith/prog/invoice/src/parse-address.ts[24m
-  [2m14:46[22m  [31merror[39m  Unsafe call of a type that could not be resolved  [2m@typescript-eslint/no-unsafe-call[22m
+/Users/jacksmith/prog/invoice/src/index.ts
+  29:1  warning  Unexpected console statement  no-console
 
-[4m/Users/jacksmith/prog/invoice/src/payee.ts[24m
-  [2m52:5[22m   [33mwarning[39m  Unexpected console statement                                    [2mno-console[22m
-  [2m75:13[22m  [31merror[39m    Unsafe assignment of an `any` value                             [2m@typescript-eslint/no-unsafe-assignment[22m
-  [2m77:17[22m  [31merror[39m    Unexpected any. Specify a different type                        [2m@typescript-eslint/no-explicit-any[22m
-  [2m77:36[22m  [31merror[39m    Unsafe return of a value of type `any`                          [2m@typescript-eslint/no-unsafe-return[22m
-  [2m77:42[22m  [31merror[39m    Unsafe member access [key] on an `any` value                    [2m@typescript-eslint/no-unsafe-member-access[22m
-  [2m85:18[22m  [31merror[39m    Unexpected any. Specify a different type                        [2m@typescript-eslint/no-explicit-any[22m
-  [2m90:20[22m  [31merror[39m    Unsafe member access [key] on an `any` value                    [2m@typescript-eslint/no-unsafe-member-access[22m
-  [2m91:17[22m  [31merror[39m    Unsafe member access [key] on an `any` value                    [2m@typescript-eslint/no-unsafe-member-access[22m
-  [2m94:7[22m   [31merror[39m    Unsafe assignment of an `any` value                             [2m@typescript-eslint/no-unsafe-assignment[22m
-  [2m94:25[22m  [31merror[39m    Unsafe member access [key] on an `any` value                    [2m@typescript-eslint/no-unsafe-member-access[22m
-  [2m97:13[22m  [31merror[39m    Unsafe member access [keys[keys.length - 1]] on an `any` value  [2m@typescript-eslint/no-unsafe-member-access[22m
+/Users/jacksmith/prog/invoice/src/payee.ts
+  70:5  warning  Unexpected console statement  no-console
 
-[4m/Users/jacksmith/prog/invoice/src/pdf-fix.ts[24m
-  [2m21:14[22m  [33mwarning[39m  Unexpected console statement  [2mno-console[22m
+/Users/jacksmith/prog/invoice/src/pdf-fix.ts
+  21:14  warning  Unexpected console statement  no-console
 
-[4m/Users/jacksmith/prog/invoice/src/persistence.ts[24m
-    [2m9:32[22m   [31merror[39m  Invalid type "string | undefined" of template literal expression              [2m@typescript-eslint/restrict-template-expressions[22m
-    [2m9:58[22m   [31merror[39m  Invalid type "string | undefined" of template literal expression              [2m@typescript-eslint/restrict-template-expressions[22m
-    [2m9:84[22m   [31merror[39m  Invalid type "string | undefined" of template literal expression              [2m@typescript-eslint/restrict-template-expressions[22m
-    [2m9:110[22m  [31merror[39m  Invalid type "string | undefined" of template literal expression              [2m@typescript-eslint/restrict-template-expressions[22m
-    [2m9:146[22m  [31merror[39m  Invalid type "string | undefined" of template literal expression              [2m@typescript-eslint/restrict-template-expressions[22m
-   [2m96:11[22m   [31merror[39m  Using the spread operator on class instances will lose their class prototype  [2m@typescript-eslint/no-misused-spread[22m
-  [2m111:5[22m    [31merror[39m  Unnecessary try/catch wrapper                                                 [2mno-useless-catch[22m
-  [2m127:5[22m    [31merror[39m  Unnecessary try/catch wrapper                                                 [2mno-useless-catch[22m
+/Users/jacksmith/prog/invoice/src/read-image.ts
+  14:3  warning  Unexpected console statement  no-console
 
-[4m/Users/jacksmith/prog/invoice/src/read-image.ts[24m
-  [2m14:3[22m  [33mwarning[39m  Unexpected console statement  [2mno-console[22m
+✖ 4 problems (0 errors, 4 warnings)
 
-[31m[1m✖ 24 problems (20 errors, 4 warnings)[22m[39m
-[0m
-[41m[30m ELIFECYCLE [39m[49m [31mCommand failed with exit code 1.[39m
