@@ -2,7 +2,7 @@ import { z } from "zod";
 
 import { getAddressFromText } from "./ai-parse";
 import { parseAddress } from "./parse-address";
-import { readImage } from "./read-image";
+import { readImage } from "./read-media";
 import type { Payee, PayeeRawAddress } from "./types";
 
 const PayeeSchema = z.object({

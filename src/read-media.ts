@@ -38,7 +38,7 @@ const enforceFileToPng = async (fileName: string): Promise<string> => {
       magick -density 300 ${fileName} src/${nameWithoutExtension}.png
     `;
   } else {
-    throw new Error("Not a valid fileformat");
+    throw new Error("Not a valid image fileformat");
   }
   // await Bun.$`
   //   rm -rf ${fileName}
@@ -46,3 +46,41 @@ const enforceFileToPng = async (fileName: string): Promise<string> => {
 
   return `src/${nameWithoutExtension}.png`;
 };
+
+export const readAudio = async (audioName: string): Promise<string> => {
+  const audioToWav = await enforceFileToWav(audioName);
+  const myText = await readWav(audioToWav);
+  return myText;
+}
+
+const enforceFileToWav = async (fileName: string): Promise<string> => {
+  const extension = path.extname(fileName);
+  console.log("Extension is ", extension);
+
+  if (extension == "wav") {
+    return fileName;
+  }
+
+  const audioFormats = [
+    ".mp3",
+    ".aac",
+    ".flac",
+    ".ogg",
+    ".aif",
+    ".aiff",
+  ];
+
+  const nameWithoutExtension = path.parse(fileName).name;
+  if (audioFormats.includes(extension)) {
+    await Bun.$`
+      ffmpeg -i ${fileName} -ar 16000 -ac 1 -c:a pcm_s16le src/${nameWithoutExtension}.wav
+    `;
+  } else {
+    throw new Error("Not a valid audio fileformat");
+  }
+  return `src/${nameWithoutExtension}.wav`
+}
+
+const readWav = async (fileName: string): Promise<string> => {
+  return await Bun.$`whisper-cli -f ${fileName} -nt -np`.text();
+}

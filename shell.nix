@@ -14,9 +14,16 @@ pkgs.mkShellNoCC {
     imagemagick
     ollama
     procps
+    ffmpeg
+    whisper-cpp
+    curl
+    cacert
   ];
 
   shellHook = ''
+    export SSL_CERT_FILE="${pkgs.cacert}/etc/ssl/certs/ca-bundle.crt"
+    export NIX_SSL_CERT_FILE="${pkgs.cacert}/etc/ssl/certs/ca-bundle.crt"
+
     if [ -f .env ]; then
       set -a
       source .env
@@ -47,6 +54,12 @@ pkgs.mkShellNoCC {
     "
 
     ollama pull "$AI_MODEL"
+
+    if [ ! -f models/ggml-base.en.bin ]; then
+      mkdir -p models
+      curl -L -o models/ggml-base.en.bin https://huggingface.co/ggerganov/whisper.cpp/resolve/main/ggml-base.en.bin
+    fi
+
     aube install
   '';
 }

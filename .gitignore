@@ -70,3 +70,7 @@ src/clujaddress.jpg
 .env
 .mongodb
 .turbo
+models/
+.turbo/
+*.wav
+*.ogg
