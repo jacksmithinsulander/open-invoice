@@ -3,7 +3,7 @@
   "tasks": {
     "build:check": {
       "dependsOn": ["^build:check", "lint:check", "test:check"],
-      "outputs": [],
+      "outputs": []
     },
     "lint:check": {},
     "test:check": {
