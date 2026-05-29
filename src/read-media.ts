@@ -51,7 +51,7 @@ export const readAudio = async (audioName: string): Promise<string> => {
   const audioToWav = await enforceFileToWav(audioName);
   const myText = await readWav(audioToWav);
   return myText;
-}
+};
 
 const enforceFileToWav = async (fileName: string): Promise<string> => {
   const extension = path.extname(fileName);
@@ -61,14 +61,7 @@ const enforceFileToWav = async (fileName: string): Promise<string> => {
     return fileName;
   }
 
-  const audioFormats = [
-    ".mp3",
-    ".aac",
-    ".flac",
-    ".ogg",
-    ".aif",
-    ".aiff",
-  ];
+  const audioFormats = [".mp3", ".aac", ".flac", ".ogg", ".aif", ".aiff"];
 
   const nameWithoutExtension = path.parse(fileName).name;
   if (audioFormats.includes(extension)) {
@@ -78,9 +71,9 @@ const enforceFileToWav = async (fileName: string): Promise<string> => {
   } else {
     throw new Error("Not a valid audio fileformat");
   }
-  return `src/${nameWithoutExtension}.wav`
-}
+  return `src/${nameWithoutExtension}.wav`;
+};
 
 const readWav = async (fileName: string): Promise<string> => {
   return await Bun.$`whisper-cli -f ${fileName} -nt -np`.text();
-}
+};
