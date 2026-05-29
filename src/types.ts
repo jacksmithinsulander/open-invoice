@@ -52,3 +52,17 @@ export enum PayeeFields {
   Country = "address.country",
   CountryCode = "address.countryCode",
 }
+
+export interface AccountInfo {
+  name?: string;
+  email?: string;
+  phoneNumber?: string;
+  address?: Address;
+  orgName?: string;
+  taxNumber?: string;
+  hasLogo?: boolean;
+  
+}
+
+
+
