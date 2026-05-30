@@ -38,10 +38,15 @@ export async function disconnectTestMongo(): Promise<void> {
 }
 
 export async function clearPayees(): Promise<void> {
-  const model = mongoose.models.Payee;
-  if (model) {
-    await model.deleteMany({});
+  if (mongoose.connection.readyState !== 1) {
+    return;
   }
+
+  const { payeeSchema } = await import("../../src/modules/payees/payees.schema");
+  const model =
+    (mongoose.models.Payee as typeof mongoose.Model | undefined) ??
+    mongoose.model("Payee", payeeSchema);
+  await model.deleteMany({});
 }
 
 export function wasConnectedByTests(): boolean {

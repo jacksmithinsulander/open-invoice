@@ -45,9 +45,10 @@ export const putPayee = async (
   if (!newPayee.orgName) {
     throw new Error("You must send the new payee with full org name");
   }
-  const payee: PayeeService = await payeeRepository.getPayee(oldPayeeName);
-  const newPayeeService: PayeeService =
-    await payeeRepository.replacePayee(payee,oldPayeeName);
+  const newPayeeService: PayeeService = await payeeRepository.replacePayee(
+    new PayeeService(newPayee),
+    oldPayeeName,
+  );
   return newPayeeService.export();
 };
 
@@ -72,11 +73,15 @@ export const patchPayee = async (
     const payeeServiceNew: PayeeService =
       await PayeeService.init(updatedPayeeRaw);
     const payeeServiceSaved: PayeeService =
-      await payeeRepository.save(payeeServiceNew);
+      await payeeRepository.replacePayee(payeeServiceNew, payeeName);
     payeeNew = payeeServiceSaved.export();
   } else {
     payeeNew = await updatePayeeFromText(payee, rawText);
-    await payeeRepository.savePayee(payeeNew);
+    const payeeServiceSaved: PayeeService = await payeeRepository.replacePayee(
+      new PayeeService(payeeNew),
+      payeeName,
+    );
+    payeeNew = payeeServiceSaved.export();
   }
   return payeeNew;
 };

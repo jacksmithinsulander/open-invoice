@@ -90,7 +90,7 @@ describe("payees.controller", () => {
     mockReadMedia("patch text");
     mockPayeeRepository({
       getPayee: mock(async () => payeeServiceInstance),
-      savePayee: mock(async () => payeeServiceInstance),
+      replacePayee: mock(async (svc) => svc),
     });
 
     const controller = await importFreshController("patch");
@@ -106,7 +106,7 @@ describe("payees.controller", () => {
     mockReadMedia("new full address text");
     mockPayeeRepository({
       getPayee: mock(async () => payeeServiceInstance),
-      save: mock(async (svc) => svc),
+      replacePayee: mock(async (svc) => svc),
     });
 
     const controller = await importFreshController("full");
