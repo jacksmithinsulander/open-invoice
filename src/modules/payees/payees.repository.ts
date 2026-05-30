@@ -13,9 +13,14 @@ export class PayeeRepository {
       mongoose.model<Payee>("Payee", payeeSchema);
   }
 
-  async save(payee: PayeeService): Promise<PayeeService> {
+  async save(payeeService: PayeeService): Promise<PayeeService> {
+    const payee: Payee = payeeService.export();
+    return await this.savePayee(payee);
+  }
+
+  async savePayee(payee: Payee): Promise<PayeeService> {
     try {
-      const doc = new this.model(payee.export());
+      const doc = new this.model(payee);
       const saved = await doc.save();
 
       return new PayeeService(saved.toObject());
@@ -56,17 +61,23 @@ export class PayeeRepository {
     }
   }
 
-  async replacePayee(newPayeeObject: PayeeService): Promise<PayeeService> {
-    if (!newPayeeObject.payee.orgName) {
-      throw new Error("New payee object does not contain an orgname");
-    }
+  async replacePayee(
+    newPayeeObject: PayeeService,
+    payeeName: string,
+  ): Promise<PayeeService> {
+    await this.getPayee(payeeName);
     const result = await this.model.updateOne(
-      { orgName: newPayeeObject.payee.orgName },
+      { orgName: payeeName },
       {
         $set: newPayeeObject.export(),
       },
     );
-    if (result.matchedCount && result.matchedCount && result.acknowledged) {
+    if (
+      result.matchedCount &&
+      result.matchedCount &&
+      result.acknowledged &&
+      newPayeeObject.payee.orgName
+    ) {
       return await this.getPayee(newPayeeObject.payee.orgName);
     } else {
       throw new Error(

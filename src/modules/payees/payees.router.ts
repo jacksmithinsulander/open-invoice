@@ -1,5 +1,5 @@
 import * as payeeController from "./payees.controller";
-import { Payee } from "./payees.types";
+import type { Payee } from "./payees.types";
 
 export const payeeRoutes = {
   "/api/v1/payee": {
@@ -7,8 +7,8 @@ export const payeeRoutes = {
       const body = await req.json();
       const fileName = body.fileName;
       const payee: Payee = await payeeController.createPayee(fileName);
-      return Response.json(payee)
-    }
+      return Response.json(payee);
+    },
   },
   "/api/v1/payee/:payeeName": {
     async GET(req: Bun.BunRequest<"/api/v1/payee/:payeeName">) {
