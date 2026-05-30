@@ -68,9 +68,7 @@ package-lock.json
 test-assets/
 .env
 .mongodb
-.turbo
 models/
-.turbo/
 *.wav
 *.ogg
 .pnpm-store
