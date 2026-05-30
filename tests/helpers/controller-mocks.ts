@@ -27,7 +27,8 @@ export function mockPayeeRepository(overrides: RepositoryMock = {}): void {
         getPayees:
           overrides.getPayees ?? mock(async () => [payeeServiceInstance]),
         save: overrides.save ?? mock(async (svc: PayeeService) => svc),
-        savePayee: overrides.savePayee ?? mock(async () => payeeServiceInstance),
+        savePayee:
+          overrides.savePayee ?? mock(async () => payeeServiceInstance),
         deletePayee: overrides.deletePayee ?? mock(async () => undefined),
         replacePayee:
           overrides.replacePayee ?? mock(async () => payeeServiceInstance),

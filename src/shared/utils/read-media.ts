@@ -50,9 +50,14 @@ const readImage = async (
     extension !== ".png"
       ? await enforceFileToPng(fileName, extension)
       : fileName;
+
   const worker = await createWorker("eng");
-  const myText = await worker.recognize(imageNamePng);
-  return myText.data.text;
+  try {
+    const myText = await worker.recognize(imageNamePng);
+    return myText.data.text;
+  } finally {
+    await worker.terminate();
+  }
 };
 
 const enforceFileToPng = async (

@@ -4,8 +4,7 @@ import type { Payee } from "./payees.types";
 export const payeeRoutes = {
   "/api/v1/payee": {
     async POST(req: Bun.BunRequest<"/api/v1/payee/:payeeName">) {
-      const body = await req.json();
-      const fileName = body.fileName;
+      const { fileName } = (await req.json()) as { fileName: string };
       const payee: Payee = await payeeController.createPayee(fileName);
       return Response.json(payee);
     },
@@ -16,8 +15,7 @@ export const payeeRoutes = {
       return Response.json(payee);
     },
     async PATCH(req: Bun.BunRequest<"/api/v1/payee/:payeeName">) {
-      const body = await req.json();
-      const fileName = body.fileName;
+      const { fileName } = (await req.json()) as { fileName: string };
       const payee: Payee = await payeeController.patchPayee(
         fileName,
         req.params.payeeName,

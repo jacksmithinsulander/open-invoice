@@ -1,6 +1,9 @@
 import { join } from "node:path";
 
-import type { Payee, PayeeRawAddress } from "../../src/modules/payees/payees.types";
+import type {
+  Payee,
+  PayeeRawAddress,
+} from "../../src/modules/payees/payees.types";
 import type { NominatimResponse } from "../../src/modules/payees/payees.types";
 
 export const completePayee: Payee = {

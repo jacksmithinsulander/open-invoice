@@ -76,9 +76,7 @@ function chatHandler(
   });
 }
 
-export function mockOllama(
-  handler?: (prompt: string) => ChatResponse,
-): void {
+export function mockOllama(handler?: (prompt: string) => ChatResponse): void {
   spyOn(ollama, "chat").mockImplementation(
     chatHandler(handler) as typeof ollama.chat,
   );
@@ -148,24 +146,26 @@ export function mockFetchNominatim(
   ok = true,
 ): void {
   const realFetch = globalThis.fetch.bind(globalThis);
-  globalThis.fetch = mock(async (input: RequestInfo | URL, init?: RequestInit) => {
-    const url =
-      typeof input === "string"
-        ? input
-        : input instanceof URL
-          ? input.href
-          : input.url;
+  globalThis.fetch = mock(
+    async (input: RequestInfo | URL, init?: RequestInit) => {
+      const url =
+        typeof input === "string"
+          ? input
+          : input instanceof URL
+            ? input.href
+            : input.url;
 
-    if (url.includes("nominatim.openstreetmap.org")) {
-      return {
-        ok,
-        status: ok ? 200 : 500,
-        json: async () => responses,
-      } as Response;
-    }
+      if (url.includes("nominatim.openstreetmap.org")) {
+        return {
+          ok,
+          status: ok ? 200 : 500,
+          json: async () => responses,
+        } as Response;
+      }
 
-    return realFetch(input, init);
-  }) as typeof fetch;
+      return realFetch(input, init);
+    },
+  ) as typeof fetch;
 }
 
 export function restoreFetch(): void {
