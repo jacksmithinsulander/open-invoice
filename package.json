@@ -13,8 +13,12 @@
     "lint": "turbo run lint:check",
     "lint:check": "eslint .",
     "lint:fix": "eslint . --fix",
-    "test": "turbo run test:check",
-    "test:check": "bun test --pass-with-no-tests"
+    "test": "turbo run test:all",
+    "test:all": "nix-shell --run 'bun test tests/coverage && cd tests/isolated && bun test'",
+    "test:coverage": "nix-shell --run 'bun test tests/coverage --coverage'",
+    "test:isolated": "nix-shell --run 'cd tests/isolated && bun test'",
+    "test:check": "nix-shell --run 'bun test tests/coverage --coverage && cd tests/isolated && bun test'",
+    "test:watch": "nix-shell --run 'bun test tests/coverage --watch'"
   },
   "devDependencies": {
     "@eslint/js": "^10.0.1",

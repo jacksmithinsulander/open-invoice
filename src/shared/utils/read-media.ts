@@ -59,7 +59,7 @@ const enforceFileToPng = async (
   fileName: string,
   extension: string,
 ): Promise<string> => {
-  if (extension == "pdf") {
+  if (extension == ".pdf") {
     await Bun.$`
       magick -density 300 ${fileName}${extension} src/${fileName}.png
     `;

@@ -65,8 +65,7 @@ package-lock.json
 *v8.log
 /lib/
 
-src/clujaddress.png
-src/clujaddress.jpg
+test-assets/
 .env
 .mongodb
 .turbo

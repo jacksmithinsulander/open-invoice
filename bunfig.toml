@@ -1,0 +1,7 @@
+[test]
+preload = ["./tests/preload.ts"]
+coverage = true
+coverageThreshold = 0.93
+coverageSkipTestFiles = true
+coveragePathIgnorePatterns = ["tests/**"]
+coverageDir = "coverage"
