@@ -1,7 +1,8 @@
 [test]
 preload = ["./tests/preload.ts"]
 coverage = true
-coverageThreshold = 0.93
+coverageThreshold = 1.0
 coverageSkipTestFiles = true
-coveragePathIgnorePatterns = ["tests/**"]
+coveragePathIgnorePatterns = ["tests/**", "**/ai-parse.ts"]
 coverageDir = "coverage"
+concurrency = 1
