@@ -1,6 +1,6 @@
 import { z } from "zod";
 
-import { getAddressFromText } from "./ai-parse";
+import { createRawPayeeFromText } from "./ai-parse";
 import { parseAddress } from "./parse-address";
 import { readImage } from "./read-media";
 import type { Payee, PayeeRawAddress } from "./types";
@@ -66,7 +66,7 @@ export class PayeeInstance {
 
   private async createPartialFromFile(fileName: string) {
     const text: string = await readImage(fileName);
-    const payeeInfo: PayeeRawAddress = await getAddressFromText(text);
+    const payeeInfo: PayeeRawAddress = await createRawPayeeFromText(text);
     console.log(payeeInfo.rawAddress);
     if (payeeInfo.rawAddress) {
       const addressParsed = await parseAddress(payeeInfo.rawAddress);
@@ -81,6 +81,28 @@ export class PayeeInstance {
         address: addressParsed,
       };
     }
+  }
+
+  toPayeeRawAddress(): PayeeRawAddress {
+    const rawAddress = [
+      this.payee.address?.city,
+      this.payee.address?.country,
+      this.payee.address?.countryCode,
+      this.payee.address?.county,
+      this.payee.address?.houseNumber,
+      this.payee.address?.municipality,
+      this.payee.address?.postcode,
+      this.payee.address?.road,
+      this.payee.address?.suburb,
+    ]
+      .filter((value) => value !== undefined && value !== null)
+      .join(" ");
+    return {
+      email: this.payee.email,
+      orgName: this.payee.orgName,
+      taxNumber: this.payee.taxNumber,
+      rawAddress,
+    };
   }
 
   export(): Payee {

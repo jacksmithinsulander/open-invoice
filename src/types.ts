@@ -61,8 +61,4 @@ export interface AccountInfo {
   orgName?: string;
   taxNumber?: string;
   hasLogo?: boolean;
-  
 }
-
-
-

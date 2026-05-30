@@ -2,24 +2,33 @@ import type { PayeeInstance } from "./payee";
 import { PayeeRepository } from "./persistence";
 import type { Payee } from "./types";
 
+const payeeRepository = new PayeeRepository();
+
 const server = Bun.serve({
   routes: {
     "/api/status": new Response("OK"),
-    "/api/payee/:payeeName": async (req) => {
-      const payeeNameDecoded: string = decodeURIComponent(req.params.payeeName);
-      const payeeRepository = new PayeeRepository();
-      const repositoryLookup: PayeeInstance =
-        await payeeRepository.getPayee(payeeNameDecoded);
-      const payee: Payee = repositoryLookup.payee;
-      return Response.json(payee);
+    "/api/v1/payee/:payeeName": {
+      GET: async (req) => {
+        const payeeNameDecoded: string = decodeURIComponent(
+          req.params.payeeName,
+        );
+        const repositoryLookup: PayeeInstance =
+          await payeeRepository.getPayee(payeeNameDecoded);
+        const payee: Payee = repositoryLookup.payee;
+        return Response.json(payee);
+      },
     },
-    "/api/payees": async () => {
-      const payeeRepository = new PayeeRepository();
-      const repositoryLookup: PayeeInstance[] =
-        await payeeRepository.getPayees();
-      const payees = repositoryLookup.map((entry) => entry.payee);
-      return Response.json(payees);
+    "/api/v1/payees": {
+      GET: async () => {
+        const repositoryLookup: PayeeInstance[] =
+          await payeeRepository.getPayees();
+        const payees = repositoryLookup.map((entry) => entry.payee);
+        return Response.json(payees);
+      },
     },
+    //"/api/payee/"
+    // Wildcard route for all routes that start with "/api/" and aren't otherwise matched
+    "/api/*": Response.json({ message: "Not found" }, { status: 404 }),
   },
   fetch(_req) {
     return new Response("Not Found", { status: 404 });
