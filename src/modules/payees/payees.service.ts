@@ -1,8 +1,6 @@
 import addressit from "addressit";
 import { z } from "zod";
 
-import { createRawPayeeFromText } from "../../shared/utils/ai-parse";
-import { readFile } from "../../shared/utils/read-media";
 import type { Payee, PayeeRawAddress } from "./payees.types";
 import type { Address, NominatimResponse } from "./payees.types";
 
@@ -63,18 +61,15 @@ export class PayeeService {
 
   constructor(public payee: Payee) {}
 
-  static async init(fileName: string): Promise<PayeeService> {
+  static async init(payeeRaw: PayeeRawAddress): Promise<PayeeService> {
     const instance = new PayeeService({});
 
-    await instance.createPartialFromFile(fileName);
+    await instance.createPartialFromRaw(payeeRaw);
 
     return instance;
   }
 
-  private async createPartialFromFile(fileName: string) {
-    const text: string = await readFile(fileName);
-    const payeeInfo: PayeeRawAddress = await createRawPayeeFromText(text);
-    console.log(payeeInfo.rawAddress);
+  private async createPartialFromRaw(payeeInfo: PayeeRawAddress) {
     if (payeeInfo.rawAddress) {
       const addressParsed = await parseAddress(payeeInfo.rawAddress);
       if (!addressParsed) {

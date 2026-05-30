@@ -49,7 +49,14 @@ export class PayeeRepository {
     }
   }
 
-  async replacePayee(newPayeeObject: PayeeService) {
+  async deletePayee(payeeName: string) {
+    const result = await this.model.deleteOne({ orgName: payeeName });
+    if (result.deletedCount === 0) {
+      throw new Error("User not found");
+    }
+  }
+
+  async replacePayee(newPayeeObject: PayeeService): Promise<PayeeService> {
     if (!newPayeeObject.payee.orgName) {
       throw new Error("New payee object does not contain an orgname");
     }

@@ -182,3 +182,78 @@ Instructions:
 
   return payee;
 };
+
+export const shouldReplaceFullAddress = async (
+  currentPayee: Payee,
+  rawUnparsedText: string,
+): Promise<boolean> => {
+  const prompt = `
+You are a Payee update intent classifier.
+
+Decide whether the user's text is asking to replace the entire address of the current Payee.
+
+Return a JSON object matching:
+
+{
+  "replaceFullAddress": boolean
+}
+
+Meaning:
+
+true:
+- The user is supplying a new address that should replace the existing address.
+- The text provides a complete or mostly complete address intended to become the new address.
+- The text says things like "use this address", "my address is", "the correct address is", or contains a pasted address block.
+- The existing address should be discarded and replaced.
+
+false:
+- The user wants to update or correct existing Payee information.
+- The user wants to update only one address field.
+- The user wants to update multiple address fields, but not replace the entire address.
+- The user wants to update email, orgName, taxNumber, or any other non-address field.
+- The user wants to merge new information into the existing Payee.
+- The user is refining, correcting, supplementing, or extending existing information.
+- The text is ambiguous.
+
+Current Payee JSON:
+${JSON.stringify(currentPayee, null, 2)}
+
+User text:
+"""
+${rawUnparsedText}
+"""
+
+Rules:
+- Return true ONLY when the user is supplying a new address that should replace the existing address.
+- Return false for corrections, additions, refinements, or updates to an existing Payee.
+- Return false for every non-address update.
+- If the user updates email, orgName, or taxNumber, return false.
+- If the user updates only one address component, return false.
+- If the user updates multiple address components but does not provide a full replacement address, return false.
+- Use the Current Payee JSON when deciding whether the text is replacing the full address or merely updating part of it.
+- If uncertain, return false.
+- Prefer false over true unless replacement of the entire address is clear.
+- Return ONLY valid JSON matching the schema.
+- Do not include explanations.
+`;
+
+  const aiResponse = await ollama.chat({
+    model: OLLAMA_MODEL,
+    format: {
+      type: "object",
+      properties: {
+        replaceFullAddress: {
+          type: "boolean",
+        },
+      },
+      required: ["replaceFullAddress"],
+    },
+    messages: [{ role: "user", content: prompt }],
+  });
+
+  const { replaceFullAddress } = JSON.parse(aiResponse.message.content) as {
+    replaceFullAddress: boolean;
+  };
+
+  return replaceFullAddress;
+};
