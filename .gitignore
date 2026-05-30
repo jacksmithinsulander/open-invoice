@@ -72,3 +72,4 @@ models/
 *.wav
 *.ogg
 .pnpm-store
+.turbo
