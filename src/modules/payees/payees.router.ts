@@ -2,6 +2,14 @@ import * as payeeController from "./payees.controller";
 import { Payee } from "./payees.types";
 
 export const payeeRoutes = {
+  "/api/v1/payee": {
+    async POST(req: Bun.BunRequest<"/api/v1/payee/:payeeName">) {
+      const body = await req.json();
+      const fileName = body.fileName;
+      const payee: Payee = await payeeController.createPayee(fileName);
+      return Response.json(payee)
+    }
+  },
   "/api/v1/payee/:payeeName": {
     async GET(req: Bun.BunRequest<"/api/v1/payee/:payeeName">) {
       const payee: Payee = await payeeController.getPayee(req.params.payeeName);
