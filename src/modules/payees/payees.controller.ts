@@ -47,7 +47,7 @@ export const putPayee = async (
   }
   const payee: PayeeService = await payeeRepository.getPayee(oldPayeeName);
   const newPayeeService: PayeeService =
-    await payeeRepository.replacePayee(payee);
+    await payeeRepository.replacePayee(payee,oldPayeeName);
   return newPayeeService.export();
 };
 
