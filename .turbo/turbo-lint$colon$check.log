@@ -1,21 +1,14 @@
 
 
 > @ lint:check /Users/jacksmith/prog/invoice
-> eslint .
+> eslint . --fix
 
 [0m
-[4m/Users/jacksmith/prog/invoice/src/index.ts[24m
-  [2m38:1[22m  [33mwarning[39m  Unexpected console statement  [2mno-console[22m
+[4m/Users/jacksmith/prog/invoice/src/modules/payees/payees.service.ts[24m
+  [2m70:5[22m  [33mwarning[39m  Unexpected console statement  [2mno-console[22m
 
-[4m/Users/jacksmith/prog/invoice/src/payee.ts[24m
-  [2m68:11[22m  [31merror[39m    Unsafe assignment of an error typed value           [2m@typescript-eslint/no-unsafe-assignment[22m
-  [2m68:32[22m  [31merror[39m    Unsafe call of a type that could not be resolved    [2m@typescript-eslint/no-unsafe-call[22m
-  [2m70:5[22m   [33mwarning[39m  Unexpected console statement                        [2mno-console[22m
-  [2m98:49[22m  [31merror[39m    Unnecessary conditional, the types have no overlap  [2m@typescript-eslint/no-unnecessary-condition[22m
+[4m/Users/jacksmith/prog/invoice/src/server.ts[24m
+  [2m18:1[22m  [33mwarning[39m  Unexpected console statement  [2mno-console[22m
 
-[4m/Users/jacksmith/prog/invoice/src/pdf-fix.ts[24m
-  [2m27:14[22m  [33mwarning[39m  Unexpected console statement  [2mno-console[22m
-
-[31m[1m✖ 6 problems (3 errors, 3 warnings)[22m[39m
+[33m[1m✖ 2 problems (0 errors, 2 warnings)[22m[39m
 [0m
-[41m[30m ELIFECYCLE [39m[49m [31mCommand failed with exit code 1.[39m

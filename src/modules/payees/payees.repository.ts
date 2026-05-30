@@ -1,47 +1,8 @@
-import dotenv from "dotenv";
-import mongoose, { type Model, Schema } from "mongoose";
+import mongoose, { type Model } from "mongoose";
 
-import { PayeeInstance } from "./payees.service";
-import type { Address, Payee, PayeeFields } from "./payees.types";
-
-dotenv.config();
-
-function getRequiredEnv(name: string): string {
-  const value = process.env[name];
-
-  if (!value) {
-    throw new Error(`Missing environment variable: ${name}`);
-  }
-
-  return value;
-}
-
-function getMongoUri(): string {
-  const app = getRequiredEnv("MONGO_APP");
-
-  return `mongodb://${getRequiredEnv("MONGO_USER")}:${getRequiredEnv("MONGO_PASS")}@${getRequiredEnv("MONGO_PORT")}/${app}?authSource=${app}`;
-}
-
-const addressSchema = new Schema<Address>({
-  houseNumber: Number,
-  road: String,
-  suburb: String,
-  city: String,
-  municipality: String,
-  county: String,
-  postcode: String,
-  country: String,
-  countryCode: String,
-});
-
-const payeeSchema = new Schema<Payee>({
-  email: String,
-  address: addressSchema,
-  orgName: String,
-  taxNumber: String,
-});
-
-payeeSchema.index({ orgName: 1, taxNumber: 1 }, { unique: true });
+import { payeeSchema } from "./payees.schema";
+import { PayeeService } from "./payees.service";
+import type { Payee, PayeeFields } from "./payees.types";
 
 export class PayeeRepository {
   private model: Model<Payee>;
@@ -52,21 +13,12 @@ export class PayeeRepository {
       mongoose.model<Payee>("Payee", payeeSchema);
   }
 
-  async connect() {
-    if (
-      mongoose.connection.readyState === mongoose.ConnectionStates.disconnected
-    ) {
-      await mongoose.connect(getMongoUri());
-    }
-  }
-
-  async save(payee: PayeeInstance): Promise<PayeeInstance> {
-    await this.connect();
+  async save(payee: PayeeService): Promise<PayeeService> {
     try {
       const doc = new this.model(payee.export());
       const saved = await doc.save();
 
-      return new PayeeInstance(saved.toObject());
+      return new PayeeService(saved.toObject());
     } catch (err: unknown) {
       if (
         err instanceof mongoose.mongo.MongoServerError &&
@@ -84,7 +36,6 @@ export class PayeeRepository {
     field: PayeeFields,
     newValue: string | number,
   ) {
-    await this.connect();
     const result = await this.model.updateOne(
       { orgName: payeeName },
       { [field]: newValue },
@@ -98,8 +49,7 @@ export class PayeeRepository {
     }
   }
 
-  async replacePayee(newPayeeObject: PayeeInstance) {
-    await this.connect();
+  async replacePayee(newPayeeObject: PayeeService) {
     if (!newPayeeObject.payee.orgName) {
       throw new Error("New payee object does not contain an orgname");
     }
@@ -118,22 +68,18 @@ export class PayeeRepository {
     }
   }
 
-  async getPayee(payeeName: string): Promise<PayeeInstance> {
-    await this.connect();
-
+  async getPayee(payeeName: string): Promise<PayeeService> {
     const myPayee = await this.model.findOne({ orgName: payeeName }).exec();
 
     if (!myPayee) {
       throw new Error(`Payee ${payeeName} not found`);
     }
 
-    return new PayeeInstance(myPayee.toObject());
+    return new PayeeService(myPayee.toObject());
   }
 
-  async getPayees(): Promise<PayeeInstance[]> {
-    await this.connect();
-
+  async getPayees(): Promise<PayeeService[]> {
     const myContacts = await this.model.find({}).exec();
-    return myContacts.map((contact) => new PayeeInstance(contact.toObject()));
+    return myContacts.map((contact) => new PayeeService(contact.toObject()));
   }
 }

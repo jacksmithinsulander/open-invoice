@@ -39,7 +39,7 @@ function getPathValue(source: unknown, path: string): unknown {
   return current;
 }
 
-export class PayeeInstance {
+export class PayeeService {
   private requiredFields = [
     "email",
     "orgName",
@@ -56,8 +56,8 @@ export class PayeeInstance {
 
   constructor(public payee: Payee) {}
 
-  static async init(fileName: string): Promise<PayeeInstance> {
-    const instance = new PayeeInstance({});
+  static async init(fileName: string): Promise<PayeeService> {
+    const instance = new PayeeService({});
 
     await instance.createPartialFromFile(fileName);
 
@@ -95,7 +95,7 @@ export class PayeeInstance {
       this.payee.address?.road,
       this.payee.address?.suburb,
     ]
-      .filter((value) => value !== undefined && value !== null)
+      .filter((value) => value !== undefined)
       .join(" ");
     return {
       email: this.payee.email,
