@@ -38,11 +38,14 @@ export const deletePayee = async (payeeName: string): Promise<boolean> => {
   return true;
 };
 
-export const putPayee = async (newPayee: Payee): Promise<Payee> => {
+export const putPayee = async (
+  newPayee: Payee,
+  oldPayeeName: string,
+): Promise<Payee> => {
   if (!newPayee.orgName) {
     throw new Error("You must send the new payee with full org name");
   }
-  const payee: PayeeService = await payeeRepository.getPayee(newPayee.orgName);
+  const payee: PayeeService = await payeeRepository.getPayee(oldPayeeName);
   const newPayeeService: PayeeService =
     await payeeRepository.replacePayee(payee);
   return newPayeeService.export();
