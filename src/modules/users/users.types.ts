@@ -1,6 +1,6 @@
 import { type Address } from "../../shared/types/address";
 
-export interface AccountInfo {
+export interface User {
   name?: string;
   email?: string;
   phoneNumber?: string;
