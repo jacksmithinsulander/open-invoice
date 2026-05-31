@@ -1,3 +1,5 @@
+import { type Address } from "../../shared/types/address";
+
 export type NominatimResponse = {
   address?: {
     house_number?: string;
@@ -11,18 +13,6 @@ export type NominatimResponse = {
     country_code?: string;
   };
 };
-
-export interface Address {
-  houseNumber?: number;
-  road?: string;
-  suburb?: string;
-  city?: string;
-  municipality?: string;
-  county?: string;
-  postcode?: string;
-  country?: string;
-  countryCode?: string;
-}
 
 export interface Payee {
   email?: string;
@@ -51,14 +41,4 @@ export enum PayeeFields {
   Postcode = "address.postcode",
   Country = "address.country",
   CountryCode = "address.countryCode",
-}
-
-export interface AccountInfo {
-  name?: string;
-  email?: string;
-  phoneNumber?: string;
-  address?: Address;
-  orgName?: string;
-  taxNumber?: string;
-  hasLogo?: boolean;
 }

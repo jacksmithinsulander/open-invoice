@@ -72,8 +72,10 @@ export const patchPayee = async (
     );
     const payeeServiceNew: PayeeService =
       await PayeeService.init(updatedPayeeRaw);
-    const payeeServiceSaved: PayeeService =
-      await payeeRepository.replacePayee(payeeServiceNew, payeeName);
+    const payeeServiceSaved: PayeeService = await payeeRepository.replacePayee(
+      payeeServiceNew,
+      payeeName,
+    );
     payeeNew = payeeServiceSaved.export();
   } else {
     payeeNew = await updatePayeeFromText(payee, rawText);

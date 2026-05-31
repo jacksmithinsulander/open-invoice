@@ -42,7 +42,8 @@ export async function clearPayees(): Promise<void> {
     return;
   }
 
-  const { payeeSchema } = await import("../../src/modules/payees/payees.schema");
+  const { payeeSchema } =
+    await import("../../src/modules/payees/payees.schema");
   const model =
     (mongoose.models.Payee as typeof mongoose.Model | undefined) ??
     mongoose.model("Payee", payeeSchema);

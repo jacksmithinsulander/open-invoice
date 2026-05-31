@@ -1,8 +1,9 @@
 import addressit from "addressit";
 import { z } from "zod";
 
+import type { Address } from "../../shared/types/address";
 import type { Payee, PayeeRawAddress } from "./payees.types";
-import type { Address, NominatimResponse } from "./payees.types";
+import type { NominatimResponse } from "./payees.types";
 
 const BASE_URL = "https://nominatim.openstreetmap.org/search?";
 
