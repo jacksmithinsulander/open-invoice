@@ -1,6 +1,7 @@
 import addressit from "addressit";
-import { Address } from "../types/address";
-import { NominatimResponse } from "../types/address";
+
+import type { Address } from "../types/address";
+import type { NominatimResponse } from "../types/address";
 
 const BASE_URL = "https://nominatim.openstreetmap.org/search?";
 
@@ -134,9 +135,9 @@ export abstract class BaseFunctions<T> extends RequiredFields {
       }
 
       // Else some good ol' recursion
-      return parseAddress(shortenedAddress);
+      return this.parseAddress(shortenedAddress);
     } else {
-      return decodeAddress(responseJson);
+      return this.decodeAddress(responseJson);
     }
   }
 

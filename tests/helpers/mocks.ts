@@ -78,7 +78,7 @@ function chatHandler(
 
 export function mockOllama(handler?: (prompt: string) => ChatResponse): void {
   spyOn(ollama, "chat").mockImplementation(
-    chatHandler(handler) as typeof ollama.chat,
+    chatHandler(handler) as unknown as typeof ollama.chat,
   );
 }
 
@@ -114,7 +114,7 @@ export function mockOllamaReplaceFullAddress(replace: boolean): void {
           }),
         },
       };
-    }) as typeof ollama.chat,
+    }) as unknown as typeof ollama.chat,
   );
 }
 
@@ -123,8 +123,23 @@ export function mockTesseract(text = ocrText): void {
     mock(async () => ({
       recognize: mock(async () => ({ data: { text } })),
       terminate: mock(async () => undefined),
-    })) as typeof tesseract.createWorker,
+    })) as unknown as typeof tesseract.createWorker,
   );
+}
+
+export function assignMockBunShell(
+  impl: () => { text: () => Promise<string> },
+): void {
+  Bun.$ = Object.assign(impl, { raw: mock() }) as unknown as typeof Bun.$;
+}
+
+export function assignMockBunShellTag(
+  impl: (
+    strings: TemplateStringsArray,
+    ...values: unknown[]
+  ) => { text: () => Promise<string> },
+): void {
+  Bun.$ = Object.assign(impl, { raw: mock() }) as unknown as typeof Bun.$;
 }
 
 export function mockShellCommands(): void {
@@ -165,7 +180,7 @@ export function mockFetchNominatim(
 
       return realFetch(input, init);
     },
-  ) as typeof fetch;
+  ) as unknown as typeof fetch;
 }
 
 export function restoreFetch(): void {

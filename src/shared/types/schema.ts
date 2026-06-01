@@ -1,6 +1,6 @@
-import { Schema } from "mongoose";
-
 import type { Address } from "node:cluster";
+
+import { Schema } from "mongoose";
 
 export const addressSchema = new Schema<Address>({
   houseNumber: Number,

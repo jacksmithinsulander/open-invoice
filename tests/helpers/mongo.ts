@@ -2,8 +2,12 @@ import mongoose from "mongoose";
 
 let connectedByTests = false;
 
+function isMongooseConnected(): boolean {
+  return mongoose.connection.readyState === 1;
+}
+
 export async function isMongoAvailable(): Promise<boolean> {
-  if (mongoose.connection.readyState === 1) {
+  if (isMongooseConnected()) {
     return true;
   }
 
@@ -11,7 +15,7 @@ export async function isMongoAvailable(): Promise<boolean> {
     const { connectDb } = await import("../../src/db/client");
     await connectDb();
     connectedByTests = true;
-    return mongoose.connection.readyState === 1;
+    return isMongooseConnected();
   } catch (error) {
     console.warn(
       "MongoDB unavailable — DB tests skipped. Run inside nix-shell:",

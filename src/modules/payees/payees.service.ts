@@ -1,9 +1,7 @@
 import { z } from "zod";
 
+import { BaseFunctions } from "../../shared/utils/organization-base";
 import type { Payee, PayeeRawAddress } from "./payees.types";
-import {
-  BaseFunctions,
-} from "../../shared/utils/organization-base";
 
 const PayeeSchema = z.object({
   email: z.string(),

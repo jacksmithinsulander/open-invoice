@@ -1,7 +1,7 @@
 import { Schema } from "mongoose";
 
-import type { Payee } from "./payees.types";
 import { addressSchema } from "../../shared/types/schema";
+import type { Payee } from "./payees.types";
 
 export const payeeSchema = new Schema<Payee>({
   email: String,

@@ -1,6 +1,7 @@
-import { addressSchema } from "../../shared/types/schema";
-import { User } from "./users.types";
 import { Schema } from "mongoose";
+
+import { addressSchema } from "../../shared/types/schema";
+import type { User } from "./users.types";
 
 export const userSchema = new Schema<User>({
   name: String,
