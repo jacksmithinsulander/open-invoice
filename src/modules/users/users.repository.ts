@@ -2,9 +2,7 @@ import { userSchema } from "./users.schema";
 import type { User } from "./users.types";
 import mongoose, { type Model } from "mongoose";
 
-
 export class UserRepository {
-  
   private model: Model<User>;
 
   constructor() {

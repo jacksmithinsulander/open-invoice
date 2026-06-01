@@ -1,4 +1,3 @@
-
 import { Schema } from "mongoose";
 
 import type { Address } from "node:cluster";
@@ -14,4 +13,3 @@ export const addressSchema = new Schema<Address>({
   country: String,
   countryCode: String,
 });
-

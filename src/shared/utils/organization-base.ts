@@ -1,27 +1,12 @@
 import addressit from "addressit";
-import { z } from "zod";
+import { Address } from "../types/address";
+import { NominatimResponse } from "../types/address";
 
 const BASE_URL = "https://nominatim.openstreetmap.org/search?";
 
 type AddressItResult = {
   text: string;
 };
-
-const PayeeSchema = z.object({
-  email: z.string(),
-  orgName: z.string(),
-  taxNumber: z.string(),
-  address: z.object({
-    houseNumber: z.number(),
-    road: z.string(),
-    suburb: z.string(),
-    municipality: z.string(),
-    county: z.string(),
-    postcode: z.string(),
-    country: z.string(),
-    countryCode: z.string(),
-  }),
-});
 
 function isRecord(value: unknown): value is Record<string, unknown> {
   return typeof value === "object" && value !== null;
@@ -47,16 +32,18 @@ abstract class RequiredFields {
   abstract export(): void;
 }
 
-abstract class BaseFunctions extends RequiredFields {
+export abstract class BaseFunctions<T> extends RequiredFields {
+  abstract getData(): T;
+
   getMissingFields(): string[] {
     return this.requiredFields.filter((path) => {
-      const value = getPathValue(this.payee, path);
+      const value = getPathValue(this.getData(), path);
 
       return value === undefined || value === null || value === "";
     });
   }
 
-  private setField(path: string, value: string | number): Payee {
+  private setField(path: string, value: string | number): T {
     const keys = path.split(".");
     const lastKey = keys[keys.length - 1];
 
@@ -64,7 +51,7 @@ abstract class BaseFunctions extends RequiredFields {
       throw new Error(`Invalid field path: ${path}`);
     }
 
-    let current: unknown = this.payee;
+    let current: unknown = this.getData();
 
     for (const key of keys.slice(0, -1)) {
       if (!isRecord(current)) {
@@ -89,10 +76,10 @@ abstract class BaseFunctions extends RequiredFields {
 
     current[lastKey] = value;
 
-    return this.payee;
+    return this.getData();
   }
 
-  setMissingField(path: string, value: string | number): Payee {
+  setMissingField(path: string, value: string | number): T {
     if (!this.requiredFields.includes(path)) {
       throw new Error(`Unknown required field: ${path}`);
     }
@@ -111,69 +98,69 @@ abstract class BaseFunctions extends RequiredFields {
       this.setMissingField(path, value);
     }
   }
-}
 
-const parseAddress = async (
-  unparsedAddress: string,
-): Promise<Address | undefined> => {
-  const firstRoundParsing: AddressItResult = addressit(unparsedAddress);
-  const prepareForApiCall: string = firstRoundParsing.text.replace(/ /g, "+");
-  const url = new URL(BASE_URL);
-  url.searchParams.set("q", prepareForApiCall);
-  url.searchParams.set("format", "jsonv2");
-  url.searchParams.set("addressdetails", "1");
-  url.searchParams.set("limit", "1");
-  const response = await fetch(url, {
-    headers: {
-      "User-Agent": "invoice-parser/1.0",
-      Accept: "application/json",
-    },
-  });
+  async parseAddress(unparsedAddress: string): Promise<Address | undefined> {
+    const firstRoundParsing: AddressItResult = addressit(unparsedAddress);
+    const prepareForApiCall: string = firstRoundParsing.text.replace(/ /g, "+");
+    const url = new URL(BASE_URL);
+    url.searchParams.set("q", prepareForApiCall);
+    url.searchParams.set("format", "jsonv2");
+    url.searchParams.set("addressdetails", "1");
+    url.searchParams.set("limit", "1");
+    const response = await fetch(url, {
+      headers: {
+        "User-Agent": "invoice-parser/1.0",
+        Accept: "application/json",
+      },
+    });
 
-  if (!response.ok) {
-    throw new Error(`HTTP error: ${String(response.status)}`);
+    if (!response.ok) {
+      throw new Error(`HTTP error: ${String(response.status)}`);
+    }
+    const responseJson: NominatimResponse[] =
+      (await response.json()) as NominatimResponse[];
+
+    if (Object.keys(responseJson).length === 0) {
+      // Remove the last word
+      const shortenedAddress = unparsedAddress
+        .split(" ")
+        .slice(0, -1)
+        .join(" ");
+
+      // If we remove all words...
+      if (!shortenedAddress) {
+        // then it must be undefined
+        return undefined;
+      }
+
+      // Else some good ol' recursion
+      return parseAddress(shortenedAddress);
+    } else {
+      return decodeAddress(responseJson);
+    }
   }
-  const responseJson: NominatimResponse[] =
-    (await response.json()) as NominatimResponse[];
 
-  if (Object.keys(responseJson).length === 0) {
-    // Remove the last word
-    const shortenedAddress = unparsedAddress.split(" ").slice(0, -1).join(" ");
+  decodeAddress(data: NominatimResponse[]): Address | undefined {
+    const addr = data[0]?.address;
 
-    // If we remove all words...
-    if (!shortenedAddress) {
-      // then it must be undefined
+    if (!addr) {
       return undefined;
     }
 
-    // Else some good ol' recursion
-    return parseAddress(shortenedAddress);
-  } else {
-    return decodeAddress(responseJson);
+    return {
+      houseNumber: addr.house_number ? Number(addr.house_number) : undefined,
+
+      road: addr.road,
+      suburb: addr.suburb,
+      city: addr.city,
+      municipality: addr.municipality,
+      county: addr.county,
+
+      postcode: addr.postcode,
+
+      country: addr.country,
+
+      countryCode: addr.country_code,
+    };
   }
-};
-
-function decodeAddress(data: NominatimResponse[]): Address | undefined {
-  const addr = data[0]?.address;
-
-  if (!addr) {
-    return undefined;
-  }
-
-  return {
-    houseNumber: addr.house_number ? Number(addr.house_number) : undefined,
-
-    road: addr.road,
-    suburb: addr.suburb,
-    city: addr.city,
-    municipality: addr.municipality,
-    county: addr.county,
-
-    postcode: addr.postcode,
-
-    country: addr.country,
-
-    countryCode: addr.country_code,
-  };
 }
-

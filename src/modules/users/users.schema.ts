@@ -2,7 +2,6 @@ import { addressSchema } from "../../shared/types/schema";
 import { User } from "./users.types";
 import { Schema } from "mongoose";
 
-
 export const userSchema = new Schema<User>({
   name: String,
   email: String,
@@ -13,6 +12,5 @@ export const userSchema = new Schema<User>({
   registrationNumber: String,
   hasLogo: Boolean,
 });
-
 
 userSchema.index({ orgName: 1, taxNumber: 1 }, { unique: true });
