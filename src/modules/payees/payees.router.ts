@@ -3,7 +3,7 @@ import type { Payee } from "./payees.types";
 
 export const payeeRoutes = {
   "/api/v1/payee": {
-    async POST(req: Bun.BunRequest<"/api/v1/payee/:payeeName">) {
+    async POST(req: Bun.BunRequest<"/api/v1/payee">) {
       const { fileName } = (await req.json()) as { fileName: string };
       const payee: Payee = await payeeController.createPayee(fileName);
       return Response.json(payee);

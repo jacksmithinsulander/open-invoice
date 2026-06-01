@@ -1,4 +1,4 @@
-import type { Address } from "node:cluster";
+import type { Address } from "./address";
 
 import { Schema } from "mongoose";
 
