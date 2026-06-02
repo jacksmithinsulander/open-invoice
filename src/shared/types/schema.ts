@@ -1,6 +1,6 @@
-import type { Address } from "./address";
-
 import { Schema } from "mongoose";
+
+import type { Address } from "./address";
 
 export const addressSchema = new Schema<Address>({
   houseNumber: Number,

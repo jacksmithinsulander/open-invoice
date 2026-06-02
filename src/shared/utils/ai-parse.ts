@@ -2,6 +2,7 @@ import dotenv from "dotenv";
 import ollama from "ollama";
 
 import type { Payee, PayeeRawAddress } from "../../modules/payees/payees.types";
+import type { User, UserRawAddress } from "../../modules/users/users.types";
 
 dotenv.config();
 
@@ -235,6 +236,303 @@ Rules:
 - Prefer false over true unless replacement of the entire address is clear.
 - Return ONLY valid JSON matching the schema.
 - Do not include explanations.
+`;
+
+  const aiResponse = await ollama.chat({
+    model: OLLAMA_MODEL,
+    format: {
+      type: "object",
+      properties: {
+        replaceFullAddress: {
+          type: "boolean",
+        },
+      },
+      required: ["replaceFullAddress"],
+    },
+    messages: [{ role: "user", content: prompt }],
+  });
+
+  const { replaceFullAddress } = JSON.parse(aiResponse.message.content) as {
+    replaceFullAddress: boolean;
+  };
+
+  return replaceFullAddress;
+};
+
+export const createRawUserFromText = async (
+  rawUnparsedText: string,
+): Promise<UserRawAddress> => {
+  const prompt = `
+Extract ONLY user/business-profile information from the text below.
+
+Your task is to identify and return only data relevant for identifying the user (person or organization) issuing or owning the invoicing profile. Ignore all unrelated content completely.
+
+Return a valid JSON object matching this exact TypeScript type:
+
+export interface UserRawAddress {
+  name?: string;
+  email?: string;
+  phoneNumber?: string;
+  rawAddress?: string;
+  orgName?: string;
+  taxNumber?: string;
+  registrationNumber?: string;
+  hasLogo?: boolean;
+}
+
+Rules:
+
+- Return ONLY valid JSON.
+- Do not include explanations, markdown, comments, or extra text.
+- If a field cannot be confidently determined, omit it entirely.
+- "name" should contain the person's name if clearly associated with the user/business profile.
+- "email" should contain any email address you can gather from the text.
+- "phoneNumber" should contain a phone number associated with the user/business profile.
+- "rawAddress" should contain the full extracted address as a single string.
+- "orgName" should contain the legal or recognizable invoicing entity name.
+- "taxNumber" should include VAT number, organization number, tax ID, or similar identifiers.
+- "registrationNumber" should include a company registration number or similar registry identifier when explicitly present.
+- Do not copy "taxNumber" into "registrationNumber" unless the text clearly indicates they are the same identifier.
+- "hasLogo" must be a boolean.
+- Set "hasLogo" to true only when the text clearly indicates that the user/business profile has a logo or strongly branded header/signature.
+- Set "hasLogo" to false only when the text explicitly indicates that no logo is present.
+- If multiple entities appear, extract the most relevant user/business-profile entity.
+- If both sender/business-profile information and customer/payee information appear, prefer the sender/business-profile entity.
+- Never hallucinate or infer missing values.
+- If there are street numbers that in this picture happen to have any prefix like "nr", remove that and just use the raw number as a separate word, so change for example "nr5" to "5", or "nr.5" to "5"
+- If there is any spelling error that you can see based on your knowledge, please make sure to correct this
+
+Text to analyze:
+
+"""
+${rawUnparsedText}
+"""
+
+`;
+
+  const aiResponse = await ollama.chat({
+    model: OLLAMA_MODEL,
+    format: "json",
+    messages: [{ role: "user", content: prompt }],
+  });
+
+  const user: UserRawAddress = JSON.parse(
+    aiResponse.message.content,
+  ) as UserRawAddress;
+
+  if (user.rawAddress) {
+    user.rawAddress = user.rawAddress.replace(/\bnr\.?\s*(\d+)/gi, "$1");
+  }
+
+  return user;
+};
+
+export const updateUserFromText = async (
+  currentUser: User,
+  rawUnparsedText: string,
+): Promise<User> => {
+  const prompt = `
+
+You update an existing User object using newly extracted business-profile information.
+Return the final merged User as valid JSON matching this TypeScript type:
+
+interface User {
+  name?: string;
+  email?: string;
+  phoneNumber?: string;
+  address?: {
+    houseNumber?: number;
+    road?: string;
+    suburb?: string;
+    city?: string;
+    municipality?: string;
+    county?: string;
+    postcode?: string;
+    country?: string;
+    countryCode?: string;
+  };
+  orgName?: string;
+  taxNumber?: string;
+  registrationNumber?: string;
+  hasLogo?: boolean;
+}
+
+Current User JSON:
+
+${JSON.stringify(currentUser, null, 2)}
+
+New text to analyze:
+
+"""
+${rawUnparsedText}
+"""
+
+Instructions:
+- Extract only user/business-profile information from the new text.
+- Return the final merged User object, not a diff.
+- Preserve existing fields from Current User unless the new text confidently provides a better or more specific value.
+- Override existing fields only when the new text clearly updates that field.
+- Add missing fields only when confidently found in the new text.
+- Do not hallucinate missing values.
+- If multiple entities appear, use the most relevant user/business-profile entity.
+- If both sender/business-profile information and customer/payee information appear, prefer the sender/business-profile entity.
+- Correct obvious OCR or spelling mistakes only when the intended value is clear.
+- For street numbers like "nr5", "nr.5", or "nr 5", store houseNumber as 5.
+- address.houseNumber must be a number, not a string.
+- hasLogo must be a boolean, not a string.
+- Set hasLogo to true only when the new text clearly indicates a logo or strongly branded header/signature.
+- Set hasLogo to false only when the new text explicitly indicates that no logo is present.
+- registrationNumber should contain a company registration number or similar registry identifier when explicitly present.
+- Do not copy taxNumber into registrationNumber unless the new text clearly indicates they are the same identifier.
+- Use ISO countryCode when the country is confidently known, for example "SE" for Sweden.
+- Return ONLY valid JSON.
+- No markdown, comments, explanations, or extra text.
+
+`;
+
+  const aiResponse = await ollama.chat({
+    model: OLLAMA_MODEL,
+    format: "json",
+    messages: [{ role: "user", content: prompt }],
+  });
+
+  return JSON.parse(aiResponse.message.content) as User;
+};
+
+export const updateRawUserFromText = async (
+  currentUser: UserRawAddress,
+  rawUnparsedText: string,
+): Promise<UserRawAddress> => {
+  const prompt = `
+
+You update an existing raw User object using newly extracted business-profile information.
+
+Return the final merged User as valid JSON matching this TypeScript type:
+
+interface UserRawAddress {
+  name?: string;
+  email?: string;
+  phoneNumber?: string;
+  rawAddress?: string;
+  orgName?: string;
+  taxNumber?: string;
+  registrationNumber?: string;
+  hasLogo?: boolean;
+}
+
+Current User JSON:
+
+${JSON.stringify(currentUser, null, 2)}
+
+New text to analyze:
+
+"""
+${rawUnparsedText}
+"""
+
+Instructions:
+
+- Extract only user/business-profile information from the new text.
+- Return the final merged UserRawAddress object, not a diff.
+- Preserve existing fields unless the new text confidently provides a better or more complete value.
+- Override existing fields only when the new text clearly updates that field.
+- Add missing fields when confidently found in the new text.
+- The most important field is rawAddress.
+- rawAddress should be one complete address string, including as many known address parts as possible.
+- If the text gives a terse or partial address, expand/normalize it as much as you can when the missing parts are confidently implied by the text or common address knowledge.
+- Include street, house number, postcode, city, municipality/region, and country when confidently available or clearly implied.
+- Do not invent unknown address parts.
+- Do not add a country, city, postcode, or region unless you are confident.
+- Normalize street numbers like "nr5", "nr.5", or "nr 5" to "5".
+- Correct obvious OCR or spelling mistakes only when the intended value is clear.
+- name should contain the person's name if clearly associated with the user/business profile.
+- orgName should be the legal or recognizable invoicing entity name.
+- taxNumber should include VAT number, organization number, tax ID, or similar identifiers.
+- registrationNumber should include a company registration number or similar registry identifier when explicitly present.
+- Do not copy taxNumber into registrationNumber unless the new text clearly indicates they are the same identifier.
+- phoneNumber should contain a phone number associated with the user/business profile.
+- email should contain an email address found in the text.
+- hasLogo must be a boolean.
+- Set hasLogo to true only when the text clearly indicates that the user/business profile has a logo or strongly branded header/signature.
+- Set hasLogo to false only when the text explicitly indicates that no logo is present.
+- If multiple entities appear, use the most relevant user/business-profile entity.
+- If both sender/business-profile information and customer/payee information appear, prefer the sender/business-profile entity.
+- Return ONLY valid JSON.
+- No markdown, comments, explanations, or extra text.
+
+`;
+
+  const aiResponse = await ollama.chat({
+    model: OLLAMA_MODEL,
+    format: "json",
+    messages: [{ role: "user", content: prompt }],
+  });
+
+  const user = JSON.parse(aiResponse.message.content) as UserRawAddress;
+
+  if (user.rawAddress) {
+    user.rawAddress = user.rawAddress.replace(/\bnr\.?\s*(\d+)/gi, "$1");
+  }
+
+  return user;
+};
+
+export const shouldReplaceFullUserAddress = async (
+  currentUser: User,
+  rawUnparsedText: string,
+): Promise<boolean> => {
+  const prompt = `
+
+You are a User update intent classifier.
+
+Decide whether the user's text is asking to replace the entire address of the current User.
+Return a JSON object matching:
+
+{
+  "replaceFullAddress": boolean
+}
+
+Meaning:
+
+true:
+
+- The user is supplying a new address that should replace the existing address.
+- The text provides a complete or mostly complete address intended to become the new address.
+- The text says things like "use this address", "my address is", "the correct address is", or contains a pasted address block.
+- The existing address should be discarded and replaced.
+
+false:
+- The user wants to update or correct existing User information.
+- The user wants to update only one address field.
+- The user wants to update multiple address fields, but not replace the entire address.
+- The user wants to update name, email, phoneNumber, orgName, taxNumber, registrationNumber, hasLogo, or any other non-address field.
+- The user wants to merge new information into the existing User.
+- The user is refining, correcting, supplementing, or extending existing information.
+- The text is ambiguous.
+
+Current User JSON:
+${JSON.stringify(currentUser, null, 2)}
+
+User text:
+
+"""
+${rawUnparsedText}
+"""
+
+Rules:
+
+- Return true ONLY when the user is supplying a new address that should replace the existing address.
+- Return false for corrections, additions, refinements, or updates to an existing User.
+- Return false for every non-address update.
+- If the user updates name, email, phoneNumber, orgName, taxNumber, registrationNumber, or hasLogo, return false.
+- If the user updates only one address component, return false.
+- If the user updates multiple address components but does not provide a full replacement address, return false.
+- Use the Current User JSON when deciding whether the text is replacing the full address or merely updating part of it.
+- If uncertain, return false.
+- Prefer false over true unless replacement of the entire address is clear.
+- Return ONLY valid JSON matching the schema.
+- Do not include explanations.
+
 `;
 
   const aiResponse = await ollama.chat({
