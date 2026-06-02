@@ -3,9 +3,10 @@ import ollama from "ollama";
 import * as tesseract from "tesseract.js";
 
 import {
-  audioTranscript,
   completePayee,
   completePayeeRaw,
+  completeUser,
+  completeUserRaw,
   nominatimResponse,
   ocrText,
 } from "./fixtures";
@@ -34,6 +35,20 @@ function chatHandler(
       };
     }
 
+    if (prompt.includes("UserRawAddress")) {
+      return {
+        message: {
+          content: JSON.stringify({
+            ...completeUserRaw,
+            rawAddress:
+              replaceFullAddress === true
+                ? "10 New Street, Bucharest, Romania"
+                : "nr.5 Main Street, Cluj-Napoca, Romania",
+          }),
+        },
+      };
+    }
+
     if (prompt.includes("PayeeRawAddress")) {
       return {
         message: {
@@ -43,6 +58,17 @@ function chatHandler(
               replaceFullAddress === true
                 ? "10 New Street, Bucharest, Romania"
                 : "nr.5 Main Street, Cluj-Napoca, Romania",
+          }),
+        },
+      };
+    }
+
+    if (prompt.includes("Current User JSON")) {
+      return {
+        message: {
+          content: JSON.stringify({
+            ...completeUser,
+            email: "new@acme.example",
           }),
         },
       };
@@ -60,6 +86,16 @@ function chatHandler(
     }
 
     if (replaceFullAddress !== undefined) {
+      if (prompt.includes("User")) {
+        return {
+          message: {
+            content: JSON.stringify({
+              ...completeUser,
+              email: "patched@acme.example",
+            }),
+          },
+        };
+      }
       return {
         message: {
           content: JSON.stringify({
@@ -68,6 +104,10 @@ function chatHandler(
           }),
         },
       };
+    }
+
+    if (prompt.includes("user/business-profile")) {
+      return { message: { content: JSON.stringify(completeUserRaw) } };
     }
 
     return {
@@ -95,12 +135,34 @@ export function mockOllamaReplaceFullAddress(replace: boolean): void {
         };
       }
 
+      if (prompt.includes("UserRawAddress")) {
+        return {
+          message: {
+            content: JSON.stringify({
+              ...completeUserRaw,
+              rawAddress: "10 New Street, Bucharest, Romania",
+            }),
+          },
+        };
+      }
+
       if (prompt.includes("PayeeRawAddress")) {
         return {
           message: {
             content: JSON.stringify({
               ...completePayeeRaw,
               rawAddress: "10 New Street, Bucharest, Romania",
+            }),
+          },
+        };
+      }
+
+      if (prompt.includes("User")) {
+        return {
+          message: {
+            content: JSON.stringify({
+              ...completeUser,
+              email: "patched@acme.example",
             }),
           },
         };
@@ -140,20 +202,6 @@ export function assignMockBunShellTag(
   ) => { text: () => Promise<string> },
 ): void {
   Bun.$ = Object.assign(impl, { raw: mock() }) as unknown as typeof Bun.$;
-}
-
-export function mockShellCommands(): void {
-  const shellMock = mock(async () => ({
-    text: async () => audioTranscript,
-  }));
-
-  Object.defineProperty(globalThis, "Bun", {
-    value: {
-      ...Bun,
-      $: shellMock,
-    },
-    configurable: true,
-  });
 }
 
 export function mockFetchNominatim(

@@ -54,6 +54,14 @@ export async function clearPayees(): Promise<void> {
   await model.deleteMany({});
 }
 
-export function wasConnectedByTests(): boolean {
-  return connectedByTests;
+export async function clearUsers(): Promise<void> {
+  if (mongoose.connection.readyState !== 1) {
+    return;
+  }
+
+  const { userSchema } = await import("../../src/modules/users/users.schema");
+  const model =
+    (mongoose.models.User as typeof mongoose.Model | undefined) ??
+    mongoose.model("User", userSchema);
+  await model.deleteMany({});
 }

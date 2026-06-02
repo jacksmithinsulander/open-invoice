@@ -1,8 +1,8 @@
 import {
   createRawUserFromText,
   shouldReplaceFullAddress,
-  updateUserFromText,
   updateRawUserFromText,
+  updateUserFromText,
 } from "../../shared/utils/ai-parse";
 import { readFile } from "../../shared/utils/read-media";
 import { UserRepository } from "./users.repository";
@@ -38,7 +38,7 @@ export const deleteUser = async (userName: string): Promise<boolean> => {
   return true;
 };
 
-export const putPayee = async (
+export const putUser = async (
   newUser: User,
   oldUserName: string,
 ): Promise<User> => {
@@ -70,8 +70,7 @@ export const patchUser = async (
       userRaw,
       rawText,
     );
-    const userServiceNew: UserService =
-      await UserService.init(updatedUserRaw);
+    const userServiceNew: UserService = await UserService.init(updatedUserRaw);
     const userServiceSaved: UserService = await userRepository.replaceUser(
       userServiceNew,
       userName,

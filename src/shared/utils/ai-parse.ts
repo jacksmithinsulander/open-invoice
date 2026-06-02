@@ -476,4 +476,3 @@ Instructions:
 
   return user;
 };
-

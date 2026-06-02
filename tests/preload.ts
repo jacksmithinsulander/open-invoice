@@ -1,6 +1,6 @@
 import { afterEach, beforeEach } from "bun:test";
 
-import { clearPayees, isMongoAvailable } from "./helpers/mongo";
+import { clearPayees, clearUsers, isMongoAvailable } from "./helpers/mongo";
 
 process.env.AI_MODEL ??= "test-model";
 
@@ -16,9 +16,11 @@ const mongoAvailable = await isMongoAvailable();
 if (mongoAvailable) {
   beforeEach(async () => {
     await clearPayees();
+    await clearUsers();
   });
 
   afterEach(async () => {
     await clearPayees();
+    await clearUsers();
   });
 }
