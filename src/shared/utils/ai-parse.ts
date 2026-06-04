@@ -278,6 +278,7 @@ export interface UserRawAddress {
   taxNumber?: string;
   registrationNumber?: string;
   hasLogo?: boolean;
+  baseCurrency?: string;
 }
 
 Rules:
@@ -296,6 +297,8 @@ Rules:
 - "hasLogo" must be a boolean.
 - Set "hasLogo" to true only when the text clearly indicates that the user/business profile has a logo or strongly branded header/signature.
 - Set "hasLogo" to false only when the text explicitly indicates that no logo is present.
+- "baseCurrency" must be the ISO 4217 alphabetic code ticker only (e.g. SEK, USD, EUR), never the full currency name (not "Swedish krona", "US Dollar", etc.).
+- If currency is mentioned but the ticker cannot be determined confidently, omit baseCurrency.
 - If multiple entities appear, extract the most relevant user/business-profile entity.
 - If both sender/business-profile information and customer/payee information appear, prefer the sender/business-profile entity.
 - Never hallucinate or infer missing values.
@@ -322,6 +325,10 @@ ${rawUnparsedText}
 
   if (user.rawAddress) {
     user.rawAddress = user.rawAddress.replace(/\bnr\.?\s*(\d+)/gi, "$1");
+  }
+
+  if (user.baseCurrency) {
+    user.baseCurrency = user.baseCurrency.toUpperCase();
   }
 
   return user;
@@ -355,6 +362,7 @@ interface User {
   taxNumber?: string;
   registrationNumber?: string;
   hasLogo?: boolean;
+  baseCurrency?: string;
 }
 
 Current User JSON:
@@ -384,6 +392,8 @@ Instructions:
 - Set hasLogo to false only when the new text explicitly indicates that no logo is present.
 - registrationNumber should contain a company registration number or similar registry identifier when explicitly present.
 - Do not copy taxNumber into registrationNumber unless the new text clearly indicates they are the same identifier.
+- baseCurrency must be the ISO 4217 alphabetic code ticker only (e.g. SEK, USD, EUR), never the full currency name.
+- If currency is mentioned but the ticker cannot be determined confidently, omit baseCurrency.
 - Use ISO countryCode when the country is confidently known, for example "SE" for Sweden.
 - Return ONLY valid JSON.
 - No markdown, comments, explanations, or extra text.
@@ -396,7 +406,13 @@ Instructions:
     messages: [{ role: "user", content: prompt }],
   });
 
-  return JSON.parse(aiResponse.message.content) as User;
+  const user = JSON.parse(aiResponse.message.content) as User;
+
+  if (user.baseCurrency) {
+    user.baseCurrency = user.baseCurrency.toUpperCase();
+  }
+
+  return user;
 };
 
 export const updateRawUserFromText = async (
@@ -418,6 +434,7 @@ interface UserRawAddress {
   taxNumber?: string;
   registrationNumber?: string;
   hasLogo?: boolean;
+  baseCurrency?: string;
 }
 
 Current User JSON:
@@ -455,6 +472,8 @@ Instructions:
 - hasLogo must be a boolean.
 - Set hasLogo to true only when the text clearly indicates that the user/business profile has a logo or strongly branded header/signature.
 - Set hasLogo to false only when the text explicitly indicates that no logo is present.
+- baseCurrency must be the ISO 4217 alphabetic code ticker only (e.g. SEK, USD, EUR), never the full currency name.
+- If currency is mentioned but the ticker cannot be determined confidently, omit baseCurrency.
 - If multiple entities appear, use the most relevant user/business-profile entity.
 - If both sender/business-profile information and customer/payee information appear, prefer the sender/business-profile entity.
 - Return ONLY valid JSON.
@@ -472,6 +491,10 @@ Instructions:
 
   if (user.rawAddress) {
     user.rawAddress = user.rawAddress.replace(/\bnr\.?\s*(\d+)/gi, "$1");
+  }
+
+  if (user.baseCurrency) {
+    user.baseCurrency = user.baseCurrency.toUpperCase();
   }
 
   return user;

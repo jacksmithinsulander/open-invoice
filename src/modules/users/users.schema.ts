@@ -12,6 +12,7 @@ export const userSchema = new Schema<User>({
   taxNumber: String,
   registrationNumber: String,
   hasLogo: Boolean,
+  baseCurrency: String,
 });
 
 userSchema.index({ orgName: 1, taxNumber: 1 }, { unique: true });

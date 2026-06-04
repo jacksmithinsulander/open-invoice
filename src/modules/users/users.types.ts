@@ -9,6 +9,7 @@ export interface User {
   taxNumber?: string;
   registrationNumber?: string;
   hasLogo?: boolean;
+  baseCurrency?: string;
 }
 
 export interface UserRawAddress {
@@ -20,6 +21,7 @@ export interface UserRawAddress {
   taxNumber?: string;
   registrationNumber?: string;
   hasLogo?: boolean;
+  baseCurrency?: string;
 }
 
 export enum UserFields {
@@ -30,6 +32,7 @@ export enum UserFields {
   TaxNumber = "taxNumber",
   RegistrationNumber = "registrationNumber",
   HasLogo = "hasLogo",
+  BaseCurrency = "baseCurrency",
   HouseNumber = "address.houseNumber",
   Road = "address.road",
   Suburb = "address.suburb",

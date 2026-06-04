@@ -73,6 +73,7 @@ export class UserService extends BaseFunctions<User> {
         taxNumber: userInfo.taxNumber,
         registrationNumber: userInfo.registrationNumber,
         hasLogo: userInfo.hasLogo,
+        baseCurrency: userInfo.baseCurrency?.toUpperCase(),
         address: addressParsed,
       };
     }
@@ -100,11 +101,15 @@ export class UserService extends BaseFunctions<User> {
       taxNumber: this.user.taxNumber,
       registrationNumber: this.user.registrationNumber,
       hasLogo: this.user.hasLogo,
+      baseCurrency: this.user.baseCurrency,
       rawAddress,
     };
   }
 
   export(): User {
+    if (this.user.baseCurrency) {
+      this.user.baseCurrency = this.user.baseCurrency.toUpperCase();
+    }
     UserSchema.parse(this.user);
     return this.user;
   }

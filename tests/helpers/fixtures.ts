@@ -39,6 +39,7 @@ export const completeUser: User = {
   taxNumber: "RO87654321",
   registrationNumber: "J40/123/2020",
   hasLogo: true,
+  baseCurrency: "SEK",
   address: {
     houseNumber: 5,
     road: "Main Street",
@@ -60,6 +61,7 @@ export const completeUserRaw: UserRawAddress = {
   taxNumber: "RO87654321",
   registrationNumber: "J40/123/2020",
   hasLogo: true,
+  baseCurrency: "SEK",
   rawAddress: "5 Main Street, Cluj-Napoca, Romania",
 };
 
