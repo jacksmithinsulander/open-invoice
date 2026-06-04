@@ -66,8 +66,7 @@ export function mockUserRepository(overrides: UserRepositoryMock = {}): void {
     UserRepository: mock(function UserRepositoryMock() {
       return {
         getUser: overrides.getUser ?? mock(async () => userServiceInstance),
-        getUsers:
-          overrides.getUsers ?? mock(async () => [userServiceInstance]),
+        getUsers: overrides.getUsers ?? mock(async () => [userServiceInstance]),
         save: overrides.save ?? mock(async (svc: UserService) => svc),
         deleteUser: overrides.deleteUser ?? mock(async () => undefined),
         replaceUser:
