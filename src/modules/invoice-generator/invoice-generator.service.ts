@@ -1,26 +1,26 @@
-://import { PayeeService } from "../payees/payees.service";
+//import { PayeeService } from "../payees/payees.service";
 import { PayeeRawAddress } from "../payees/payees.types";
 //import { UserService } from "../users/users.service";
 import { UserRawAddress } from "../users/users.types";
 import pdfMake from "pdfmake/build/pdfmake";
 
-const baseApi = "https://api.frankfurter.dev/v2/rate/"
+const baseApi = "https://api.frankfurter.dev/v2/rate/";
 
 export interface Invoice {
-  currency: string,
-  price: number,
-  workedHours?: number,
-  nameOfInvoice?: string,
-  payee: PayeeRawAddress,
-  user: UserRawAddress
+  currency: string;
+  price: number;
+  workedHours?: number;
+  nameOfInvoice?: string;
+  payee: PayeeRawAddress;
+  user: UserRawAddress;
 }
 
 export interface Price {
-  basePrice: number,
-  baseCurrency: string,
-  invoicePrice: number,
-  invoiceCurrency: string,
-  rate: number
+  basePrice: number;
+  baseCurrency: string;
+  invoicePrice: number;
+  invoiceCurrency: string;
+  rate: number;
 }
 
 export interface ExchangeRateResponse {
@@ -44,8 +44,8 @@ class InvoiceService {
 
   getFullPriceDetails(): Price {
     if (!this.invoice.user.baseCurrency) {
-      throw new Error("No base currency set for user")
-    };
+      throw new Error("No base currency set for user");
+    }
 
     if (this.invoice.currency === this.invoice.user.baseCurrency) {
       return {
@@ -53,11 +53,13 @@ class InvoiceService {
         baseCurrency: this.invoice.user.baseCurrency,
         invoicePrice: this.invoice.price,
         invoiceCurrency: this.invoice.user.baseCurrency,
-        rate: 1 
-      }
+        rate: 1,
+      };
     }
 
-    const url = new URL(`${baseApi}/${this.invoice.currency}/${this.invoice.user.baseCurrency}`)
+    const url = new URL(
+      `${baseApi}/${this.invoice.currency}/${this.invoice.user.baseCurrency}`,
+    );
     const response = await fetch(url, {
       headers: {
         "User-Agent": "invoice-generator/1.0",
@@ -78,12 +80,12 @@ class InvoiceService {
       baseCurrency: this.invoice.user.baseCurrency,
       invoicePrice: this.invoice.price,
       invoiceCurrency: this.invoice.currency,
-      rate: exchangeRate.rate
-    }
+      rate: exchangeRate.rate,
+    };
   }
 }
 
-
+// playground requires you to assign document definition to a variable called dd
 
 // var dd = {
 //   content: [
@@ -95,7 +97,7 @@ class InvoiceService {
 //           bold: true,
 //         },
 //         {
-//           text: "Jack Smicc Insulander",
+//           text: "John Doe",
 //         },
 //       ],
 //     },
@@ -107,7 +109,7 @@ class InvoiceService {
 //           bold: true,
 //         },
 //         {
-//           text: "jack.smith@live.se",
+//           text: "john.doe@acme.se",
 //         },
 //       ],
 //     },
@@ -119,7 +121,7 @@ class InvoiceService {
 //           bold: true,
 //         },
 //         {
-//           text: "0707713212",
+//           text: "0707133769",
 //         },
 //       ],
 //     },
@@ -131,7 +133,43 @@ class InvoiceService {
 //           bold: true,
 //         },
 //         {
-//           text: "Västberga Allé",
+//           text: "Goodplacestreet 4",
+//         },
+//       ],
+//     },
+//     {
+//       columns: [
+//         {
+//           width: 90,
+//           text: "Organisation:",
+//           bold: true,
+//         },
+//         {
+//           text: "Acme Inc",
+//         },
+//       ],
+//     },
+//     {
+//       columns: [
+//         {
+//           width: 90,
+//           text: "Tax Number:",
+//           bold: true,
+//         },
+//         {
+//           text: "13373838",
+//         },
+//       ],
+//     },
+//     {
+//       columns: [
+//         {
+//           width: 90,
+//           text: "Registration:",
+//           bold: true,
+//         },
+//         {
+//           text: "SE13373838",
 //         },
 //       ],
 //     },
