@@ -18,6 +18,8 @@ pkgs.mkShellNoCC {
     whisper-cpp
     curl
     cacert
+    textlivePackages.ocr-b
+    symbola
   ];
 
   shellHook = ''
