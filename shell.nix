@@ -18,13 +18,17 @@ pkgs.mkShellNoCC {
     whisper-cpp
     curl
     cacert
-    textlivePackages.ocr-b
+    texlivePackages.ocr-b-outline
     symbola
+    fontconfig
   ];
 
   shellHook = ''
     export SSL_CERT_FILE="${pkgs.cacert}/etc/ssl/certs/ca-bundle.crt"
     export NIX_SSL_CERT_FILE="${pkgs.cacert}/etc/ssl/certs/ca-bundle.crt"
+    mkdir -p ./assets/fonts
+    cp ${pkgs.texlivePackages.ocr-b-outline}/fonts/opentype/public/ocr-b-outline/ocrb10.otf ./assets/fonts/ocr-b.otf
+    cp ${pkgs.symbola}/share/fonts/opentype/Symbola.otf ./assets/fonts/symbola.otf
 
     if [ -f .env ]; then
       set -a
